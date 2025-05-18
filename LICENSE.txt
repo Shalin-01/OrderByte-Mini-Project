@@ -1,0 +1,9 @@
+CC BY-NC-ND 4.0
+
+Copyright (c) 2025 OrderByte Team
+
+All rights reserved.
+
+This project is the intellectual property of the OrderByte development team. You may not modify, distribute, or use this codebase, in whole or in part, without explicit permission.
+
+For inquiries, please contact merlynstephen2004@gmail.com.
