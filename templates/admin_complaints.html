@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint Management - OrderByte Admin</title>
+ <style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+body {
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+/* Navbar styling */
+.navbar {
+        background-color: black;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+      }
+      
+      .logo {
+        font-weight: bold;
+        font-size: 1.5rem;
+        color: white;
+        text-decoration: none;
+      }
+      
+      .nav-links {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+      }
+      
+      .nav-links a {
+        text-decoration: none;
+        color: white;
+        transition: color 0.3s;
+        display: flex;
+        align-items: center;
+        height: 40px;
+      }
+      
+      .nav-links a:hover {
+        color: #ffd700;
+      }
+      
+      .avatar-container {
+        position: relative;
+        display: flex;
+        align-items: center;
+        height: 40px;
+      }
+      
+    
+      
+      .avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        cursor: pointer;
+        object-fit: cover;
+        border: 2px solid transparent;
+        transition: border-color 0.3s;
+      }
+      
+      .avatar:hover {
+        border-color: #ffd700;
+      }
+      
+      .dropdown-menu {
+        display: none;
+        position: absolute;
+        right: 0;
+        top: calc(100% + 10px);
+        background: rgb(64, 63, 63);
+        border: none;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        border-radius: 8px;
+        width: 180px;
+        z-index: 100;
+        overflow: hidden;
+        animation: dropdownFade 0.2s ease-out;
+      }
+      
+      .dropdown-menu::before {
+        content: "";
+        position: absolute;
+        top: -6px;
+        right: 16px;
+        width: 12px;
+        height: 12px;
+        background: #ffd700;
+        transform: rotate(45deg);
+        box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+      }
+      
+      .dropdown-menu a {
+        display: flex;
+        padding: 12px 16px;
+        text-decoration: none;
+        color: white;
+        background-color: rgba(0, 0, 0, 0.756);
+        font-size: 0.95rem;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+      }
+      
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+/* Main container */
+.main-container {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.page-title {
+    margin-bottom: 30px;
+    color: #333;
+    font-size: 2rem;
+}
+
+/* Dashboard card */
+.dashboard-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+/* Filters */
+.filters-container {
+    margin-bottom: 1.5rem;
+}
+
+.filters-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-group label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: #4b5563;
+}
+
+.filter-select,
+.filter-input {
+    padding: 0.625rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+}
+
+.search-container {
+    display: flex;
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    flex: 1;
+    padding: 0.625rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem 0 0 0.375rem;
+    font-size: 0.875rem;
+}
+
+.search-btn {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+    padding: 0.625rem 1rem;
+    border-radius: 0 0.375rem 0.375rem 0;
+    cursor: pointer;
+    font-size: 0.875rem;
+}
+
+.filter-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.reset-btn,
+.export-btn {
+    padding: 0.625rem 1rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.reset-btn {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.export-btn {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+/* Loading indicator */
+.loading-indicator {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+}
+
+.spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: #4f46e5;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+/* No complaints */
+.no-complaints {
+    text-align: center;
+    padding: 3rem;
+    background-color: #f9fafb;
+    border-radius: 0.5rem;
+}
+
+.no-complaints-icon {
+    width: 48px;
+    height: 48px;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.no-complaints h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.no-complaints p {
+    color: #6b7280;
+}
+
+/* Table */
+.table-container {
+    overflow-x: auto;
+}
+
+.complaints-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.complaints-table th,
+.complaints-table td {
+    padding: 0.75rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.complaints-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.complaints-table tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Status select */
+.status-select {
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.375rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fcd34d;
+}
+
+.status-resolved {
+    background-color: #d1fae5;
+    color: #065f46;
+    border: 1px solid #6ee7b7;
+}
+
+.status-rejected {
+    background-color: #fee2e2;
+    color: #b91c1c;
+    border: 1px solid #fca5a5;
+}
+
+/* Action buttons */
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.view-btn,
+.respond-btn,
+.delete-btn {
+    padding: 0.375rem 0.5rem;
+    border-radius: 0.25rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+}
+
+.view-btn {
+    background-color: #e0f2fe;
+    color: #0369a1;
+}
+
+.respond-btn {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.delete-btn {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: white;
+    margin: 10% auto;
+    padding: 1.5rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    width: 90%;
+    max-width: 700px;
+}
+
+.modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.close-modal {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #9ca3af;
+    cursor: pointer;
+}
+
+.modal-body {
+    margin-bottom: 1.5rem;
+}
+
+.modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+}
+
+.close-btn,
+.respond-modal-btn,
+.send-response-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.close-btn {
+    background-color: #f3f4f6;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.respond-modal-btn {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+}
+
+.send-response-btn {
+    background-color: #4f46e5;
+    color: white;
+    border: none;
+}
+/* More aggressive image constraint for modal */
+.complaint-image {
+    max-width: 150px;
+    max-height: 150px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.images-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    max-height: 300px;
+    overflow-y: auto;
+    width: 100%;
+}
+
+/* Force all images in modals to obey size constraints */
+#viewModalBody img, 
+#responseModalBody img {
+    max-width: 100% !important;
+    height: auto !important;
+    max-height: 200px !important;
+    object-fit: contain !important;
+    display: block !important;
+    margin: 10px auto !important;
+    border-radius: 4px !important;
+    border: 1px solid #e5e7eb !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Ensure modal content doesn't overflow */
+.modal-content {
+    max-width: 700px;
+    width: 90%;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+/* Fix for the modal body */
+.modal-body {
+    overflow-y: auto;
+    max-height: 60vh;
+    padding: 15px;
+}
+
+/* Complaint info in modal */
+.complaint-info {
+    margin-bottom: 1.5rem;
+}
+
+.complaint-info-item {
+    margin-bottom: 0.75rem;
+}
+
+.complaint-info-label {
+    font-weight: 500;
+    color: #4b5563;
+    font-size: 0.875rem;
+}
+
+.complaint-description {
+    background-color: #f9fafb;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    margin-top: 0.5rem;
+}
+
+.complaint-response {
+    background-color: #e0f2fe;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    margin-top: 0.5rem;
+ }
+
+ /* Form in response modal */
+ .form-group {
+    margin-bottom: 1rem;
+ }
+
+ .form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #4b5563;
+ }
+
+ .form-group textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #d1d5db;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    resize: vertical;
+ }
+
+/* Responsive styles */
+ @media (max-width: 768px) {
+    .navbar {
+        flex-direction: column;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+
+    .main-container {
+        margin-top: 130px;
+    }
+    
+    .filters-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-actions {
+        flex-direction: column;
+    }
+    
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 5% auto;
+    }
+ }
+</style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/admin" class="logo">ORDERBYTE ADMIN</a>
+        <div class="nav-links">
+            <a href="{{ url_for('menu_management') }}">MENUS</a>
+            <a href="{{ url_for('order') }}">ORDERS</a>
+            
+            <div class="avatar-container">
+                <img src="{{ user_data.get('profile_picture', url_for('static', filename='img/user.png')) }}" alt="Admin Avatar" class="avatar" onclick="toggleDropdown()">
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{ url_for('admin_profile') }}">PROFILE</a>
+                    <a href="{{ url_for('admin_complaints') }}">FEEDBACKS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="page-title">Complaint Management</h1>
+        
+        <div class="dashboard-card">
+            <div class="filters-container">
+                <div class="filters-grid">
+                    <div class="filter-group">
+                        <label for="statusFilter">Status</label>
+                        <select id="statusFilter" class="filter-select">
+                            <option value="all">All Statuses</option>
+                            <option value="pending">Pending</option>
+                            <option value="resolved">Resolved</option>
+                            <option value="rejected">Rejected</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="typeFilter">Complaint Type</label>
+                        <select id="typeFilter" class="filter-select">
+                            <option value="all">All Types</option>
+                            <option value="product">Food Issue</option>
+                            <option value="service">Customer Service</option>
+                            <option value="billing">Billing Issue</option>
+                            <option value="website">Website Problem</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="dateFrom">Date From</label>
+                        <input type="date" id="dateFrom" class="filter-input">
+                    </div>
+                    
+                    <div class="filter-group">
+                        <label for="dateTo">Date To</label>
+                        <input type="date" id="dateTo" class="filter-input">
+                    </div>
+                </div>
+                
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input" placeholder="Search by Email, Order Number, Description...">
+                    <button id="searchBtn" class="search-btn">Search</button>
+                </div>
+                
+                <div class="filter-actions">
+                    <button id="resetFilterBtn" class="reset-btn">Reset Filters</button>
+                    <button id="exportBtn" class="export-btn">Export Data</button>
+                </div>
+            </div>
+            
+            <div id="loadingIndicator" class="loading-indicator">
+                <div class="spinner"></div>
+                <p>Loading complaints...</p>
+            </div>
+            
+            <div id="noComplaints" class="no-complaints" style="display: none;">
+                <svg xmlns="http://www.w3.org/2000/svg" class="no-complaints-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3>No complaints found</h3>
+                <p>Try adjusting your filters to find what you're looking for.</p>
+            </div>
+            
+            <div class="table-container">
+                <table id="complaintsTable" class="complaints-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Order #</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="complaintsTableBody">
+                        {% for complaint in complaints %}
+                        <tr>
+                            <td>{{ complaint.id }}</td>
+                            <td>{{ complaint.date }}</td>
+                            <td>{{ complaint.order_number or '-' }}</td>
+                            <td>{{ complaint.user_email }}</td>
+                            <td>{{ complaint.type_display }}</td>
+                            <td>
+                                <select class="status-select status-{{ complaint.status }}" data-id="{{ complaint.id }}">
+                                    <option value="pending" {% if complaint.status == 'pending' %}selected{% endif %}>Pending</option>
+                                    <option value="resolved" {% if complaint.status == 'resolved' %}selected{% endif %}>Resolved</option>
+                                    <option value="rejected" {% if complaint.status == 'rejected' %}selected{% endif %}>Rejected</option>
+                                </select>
+                            </td>
+                            <td>
+                                <div class="action-buttons">
+                                    <button class="view-btn" data-id="{{ complaint.id }}">View</button>
+                                    <button class="respond-btn" data-id="{{ complaint.id }}">Respond</button>
+                                    <button class="delete-btn" data-id="{{ complaint.id }}">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- View Complaint Modal -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Complaint Details</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body" id="viewModalBody">
+                <!-- Content will be populated dynamically -->
+            </div>
+            <div class="modal-footer">
+                <button class="close-btn">Close</button>
+                <button class="respond-modal-btn">Respond</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Response Modal -->
+    <div id="responseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Respond to Complaint</h2>
+                <span class="close-modal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div class="complaint-info" id="responseComplaintInfo">
+                    <!-- Complaint info will be populated dynamically -->
+                </div>
+                <div class="form-group">
+                    <label for="responseText">Your Response</label>
+                    <textarea id="responseText" rows="5" placeholder="Enter your response to the customer..."></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="close-btn">Cancel</button>
+                <button class="send-response-btn">Send Response</button>
+            </div>
+        </div>
+    </div>
+
+    <script >
+        document.addEventListener('DOMContentLoaded', function() {
+    // Toggle dropdown menu
+    window.toggleDropdown = function() {
+        const dropdown = document.getElementById('dropdownMenu');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    };
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('dropdownMenu');
+        
+        if (!event.target.closest('.avatar-container')) {
+            dropdown.style.display = 'none';
+        }
+    });
+    
+    // Initialize complaints data
+    let complaintsData = [];
+    
+    // Fetch complaints data
+    function fetchComplaints() {
+        // Show loading indicator
+        document.getElementById('loadingIndicator').style.display = 'flex';
+        document.getElementById('complaintsTable').style.display = 'none';
+        document.getElementById('noComplaints').style.display = 'none';
+        
+        // Get filter values
+        const statusFilter = document.getElementById('statusFilter').value;
+        const typeFilter = document.getElementById('typeFilter').value;
+        const dateFrom = document.getElementById('dateFrom').value;
+        const dateTo = document.getElementById('dateTo').value;
+        const searchTerm = document.getElementById('searchInput').value;
+        
+        // Build query string
+        let queryParams = new URLSearchParams();
+        if (statusFilter !== 'all') queryParams.append('status', statusFilter);
+        if (typeFilter !== 'all') queryParams.append('type', typeFilter);
+        if (dateFrom) queryParams.append('date_from', dateFrom);
+        if (dateTo) queryParams.append('date_to', dateTo);
+        if (searchTerm) queryParams.append('search', searchTerm);
+        
+        // Fetch data from API
+        fetch(`/api/admin/complaints?${queryParams.toString()}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                complaintsData = data;
+                renderComplaints();
+            })
+            .catch(error => {
+                console.error('Error fetching complaints:', error);
+                alert('Failed to load complaints. Please try again.');
+            })
+            .finally(() => {
+                document.getElementById('loadingIndicator').style.display = 'none';
+            });
+    }
+    
+    // Render complaints table
+    function renderComplaints() {
+        const tableBody = document.getElementById('complaintsTableBody');
+        tableBody.innerHTML = '';
+        
+        if (complaintsData.length === 0) {
+            document.getElementById('complaintsTable').style.display = 'none';
+            document.getElementById('noComplaints').style.display = 'block';
+            return;
+        }
+        
+        document.getElementById('complaintsTable').style.display = 'table';
+        document.getElementById('noComplaints').style.display = 'none';
+        
+        complaintsData.forEach(complaint => {
+            const row = document.createElement('tr');
+            
+            // Format date
+            const date = new Date(complaint.date);
+            const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            // Get complaint type display name
+            const typeMap = {
+                'product': 'Food Issue',
+                'service': 'Customer Service',
+                'billing': 'Billing Issue',
+                'website': 'Website Problem',
+                'other': 'Other'
+            };
+            const typeDisplay = typeMap[complaint.complaint_type] || complaint.complaint_type;
+            
+            row.innerHTML = `
+                <td>${complaint.id}</td>
+                <td>${formattedDate}</td>
+                <td>${complaint.order_number || '-'}</td>
+                <td>${complaint.user_email}</td>
+                <td>${typeDisplay}</td>
+                <td>
+                    <select class="status-select status-${complaint.status}" data-id="${complaint.id}">
+                        <option value="pending" ${complaint.status === 'pending' ? 'selected' : ''}>Pending</option>
+                        <option value="resolved" ${complaint.status === 'resolved' ? 'selected' : ''}>Resolved</option>
+                        <option value="rejected" ${complaint.status === 'rejected' ? 'selected' : ''}>Rejected</option>
+                    </select>
+                </td>
+                <td>
+                    <div class="action-buttons">
+                        <button class="view-btn" data-id="${complaint.id}">View</button>
+                        <button class="respond-btn" data-id="${complaint.id}">Respond</button>
+                        <button class="delete-btn" data-id="${complaint.id}">Delete</button>
+                    </div>
+                </td>
+            `;
+            
+            tableBody.appendChild(row);
+        });
+        
+        // Add event listeners to status selects
+        document.querySelectorAll('.status-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const complaintId = this.getAttribute('data-id');
+                const newStatus = this.value;
+                updateComplaintStatus(complaintId, newStatus);
+                
+                // Update select class
+                this.className = `status-select status-${newStatus}`;
+            });
+        });
+        
+        // Add event listeners to action buttons
+        document.querySelectorAll('.view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const complaintId = this.getAttribute('data-id');
+                openViewModal(complaintId);
+            });
+        });
+        
+        document.querySelectorAll('.respond-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const complaintId = this.getAttribute('data-id');
+                openResponseModal(complaintId);
+            });
+        });
+        
+        document.querySelectorAll('.delete-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const complaintId = this.getAttribute('data-id');
+                if (confirm('Are you sure you want to delete this complaint?')) {
+                    deleteComplaint(complaintId);
+                }
+            });
+        });
+    }
+    
+    // Update complaint status
+    function updateComplaintStatus(complaintId, newStatus) {
+        fetch(`/api/admin/complaints/${complaintId}/status`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ status: newStatus }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to update status');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Update local data
+                const complaint = complaintsData.find(c => c.id === complaintId);
+                if (complaint) {
+                    complaint.status = newStatus;
+                }
+            } else {
+                alert('Failed to update status: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error updating status:', error);
+            alert('Failed to update status. Please try again.');
+        });
+    }
+    
+    // Delete complaint
+    function deleteComplaint(complaintId) {
+        fetch(`/api/admin/complaints/${complaintId}`, {
+            method: 'DELETE',
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to delete complaint');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Remove from local data and re-render
+                complaintsData = complaintsData.filter(c => c.id !== complaintId);
+                renderComplaints();
+            } else {
+                alert('Failed to delete complaint: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error deleting complaint:', error);
+            alert('Failed to delete complaint. Please try again.');
+        });
+    }
+    
+    // Open view modal
+    function openViewModal(complaintId) {
+        const complaint = complaintsData.find(c => c.id === complaintId);
+        if (!complaint) return;
+        
+        const modal = document.getElementById('viewModal');
+        const modalBody = document.getElementById('viewModalBody');
+        
+        // Format date
+        const date = new Date(complaint.date);
+        const formattedDate = date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+        
+        // Get complaint type display name
+        const typeMap = {
+            'product': 'Food Issue',
+            'service': 'Customer Service',
+            'billing': 'Billing Issue',
+            'website': 'Website Problem',
+            'other': 'Other'
+        };
+        const typeDisplay = typeMap[complaint.complaint_type] || complaint.complaint_type;
+        
+        // Build modal content
+        let content = `
+            <div class="complaint-info">
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">ID:</div>
+                    <div>${complaint.id}</div>
+                </div>
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Date:</div>
+                    <div>${formattedDate}</div>
+                </div>
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Order Number:</div>
+                    <div>${complaint.order_number || 'N/A'}</div>
+                </div>
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Email:</div>
+                    <div>${complaint.user_email}</div>
+                </div>
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Type:</div>
+                    <div>${typeDisplay}</div>
+                </div>
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Status:</div>
+                    <div>
+                        <span class="status-badge status-${complaint.status}">
+                            ${complaint.status.charAt(0).toUpperCase() + complaint.status.slice(1)}
+                        </span>
+                    </div>
+                </div>
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Description:</div>
+                    <div class="complaint-description">${complaint.description}</div>
+                </div>
+        `;
+        
+        // Add response if available
+        if (complaint.response) {
+            content += `
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Response:</div>
+                    <div class="complaint-response">${complaint.response}</div>
+                </div>
+            `;
+        }
+        
+        // Add images if available
+        if (complaint.images && complaint.images.length > 0) {
+            content += `
+                <div class="complaint-info-item">
+                    <div class="complaint-info-label">Images:</div>
+                    <div class="complaint-images">
+            `;
+            
+            complaint.images.forEach(image => {
+                content += `<img src="${image}" alt="Complaint image" class="complaint-image">`;
+            });
+            
+            content += `
+                    </div>
+                </div>
+            `;
+        }
+        
+        content += `</div>`;
+        
+        modalBody.innerHTML = content;
+        
+        // Set up respond button
+        const respondBtn = modal.querySelector('.respond-modal-btn');
+        respondBtn.onclick = function() {
+            modal.style.display = 'none';
+            openResponseModal(complaintId);
+        };
+        
+        // Set up close button
+        const closeBtn = modal.querySelector('.close-btn');
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+        
+        // Set up close X button
+        const closeX = modal.querySelector('.close-modal');
+        closeX.onclick = function() {
+            modal.style.display = 'none';
+        };
+        
+        // Show modal
+        modal.style.display = 'block';
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+    
+    // Open response modal
+    function openResponseModal(complaintId) {
+        const complaint = complaintsData.find(c => c.id === complaintId);
+        if (!complaint) return;
+        
+        const modal = document.getElementById('responseModal');
+        const complaintInfo = document.getElementById('responseComplaintInfo');
+        const responseText = document.getElementById('responseText');
+        
+        // Set current response if available
+        responseText.value = complaint.response || '';
+        
+        // Build complaint info
+        complaintInfo.innerHTML = `
+            <div class="complaint-info-item">
+                <div class="complaint-info-label">Complaint ID:</div>
+                <div>${complaint.id}</div>
+            </div>
+            <div class="complaint-info-item">
+                <div class="complaint-info-label">Customer Email:</div>
+                <div>${complaint.user_email}</div>
+            </div>
+        `;
+        
+        // Set up send button
+        const sendBtn = modal.querySelector('.send-response-btn');
+        sendBtn.onclick = function() {
+            const response = responseText.value.trim();
+            if (!response) {
+                alert('Please enter a response');
+                return;
+            }
+            
+            sendResponse(complaintId, response);
+        };
+        
+        // Set up close button
+        const closeBtn = modal.querySelector('.close-btn');
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        };
+        
+        // Set up close X button
+        const closeX = modal.querySelector('.close-modal');
+        closeX.onclick = function() {
+            modal.style.display = 'none';
+        };
+        
+        // Show modal
+        modal.style.display = 'block';
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        };
+    }
+    
+    // Send response
+    function sendResponse(complaintId, response) {
+        fetch(`/api/admin/complaints/${complaintId}/response`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ response }),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to send response');
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Update local data
+                const complaint = complaintsData.find(c => c.id === complaintId);
+                if (complaint) {
+                    complaint.response = response;
+                    complaint.status = 'resolved';
+                }
+                
+                // Close modal and update UI
+                document.getElementById('responseModal').style.display = 'none';
+                renderComplaints();
+                
+                alert('Response sent successfully!');
+            } else {
+                alert('Failed to send response: ' + (data.message || 'Unknown error'));
+            }
+        })
+        .catch(error => {
+            console.error('Error sending response:', error);
+            alert('Failed to send response. Please try again.');
+        });
+    }
+    
+    // Set up filter events
+    document.getElementById('statusFilter').addEventListener('change', fetchComplaints);
+    document.getElementById('typeFilter').addEventListener('change', fetchComplaints);
+    document.getElementById('dateFrom').addEventListener('change', fetchComplaints);
+    document.getElementById('dateTo').addEventListener('change', fetchComplaints);
+    document.getElementById('searchBtn').addEventListener('click', fetchComplaints);
+    document.getElementById('searchInput').addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            fetchComplaints();
+        }
+    });
+    
+    // Reset filters
+    document.getElementById('resetFilterBtn').addEventListener('click', function() {
+        document.getElementById('statusFilter').value = 'all';
+        document.getElementById('typeFilter').value = 'all';
+        document.getElementById('dateFrom').value = '';
+        document.getElementById('dateTo').value = '';
+        document.getElementById('searchInput').value = '';
+        fetchComplaints();
+    });
+    
+    // Export data
+    document.getElementById('exportBtn').addEventListener('click', function() {
+        window.location.href = '/api/admin/complaints/export';
+    });
+    
+    // Initial fetch
+    fetchComplaints();
+});
+    </script>
+</body>
+</html>

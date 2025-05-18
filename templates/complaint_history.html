@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complaint History - OrderByte</title>
+<style>
+    * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;}
+
+body {
+    background-color: #f7f7f7;
+    color: #333;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: black;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+/* Avatar & Dropdown */
+.avatar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.avatar:hover {
+    border-color: #ffd700;
+}
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    background: rgb(64, 63, 63);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 180px;
+    z-index: 100;
+    overflow: hidden;
+    animation: dropdownFade 0.2s ease-out;
+}
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+}
+.dropdown-menu a {
+    display: flex;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.756);
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f0f0f0;
+    height: auto;
+    transition: background-color 0.2s;
+}
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f8f8;
+    color: #000;
+}
+
+/* Main container */
+.main-container {
+    max-width: 1200px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.page-title {
+    color: #333;
+    font-size: 2rem;
+}
+
+.new-complaint-btn {
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.new-complaint-btn:hover {
+    background-color: #4338ca;
+}
+
+/* Success message */
+.success-message {
+    display: flex;
+    align-items: center;
+    background-color: #d1fae5;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-bottom: 2rem;
+}
+
+.success-icon {
+    width: 24px;
+    height: 24px;
+    color: #10b981;
+    margin-right: 1rem;
+}
+
+/* Complaints table */
+.complaints-table-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+}
+
+.complaints-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.complaints-table th,
+.complaints-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.complaints-table th {
+    background-color: #f9fafb;
+    font-weight: 600;
+    color: #374151;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.complaints-table tr:last-child td {
+    border-bottom: none;
+}
+
+.complaints-table tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-pending {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-resolved {
+    background-color: #d1fae5;
+    color: #065f46;
+}
+
+.status-rejected {
+    background-color: #fee2e2;
+    color: #b91c1c;
+}
+
+/* View button */
+.view-btn {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: #f3f4f6;
+    color: #374151;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.view-btn:hover {
+    background-color: #e5e7eb;
+}
+
+/* No complaints */
+.no-complaints {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 3rem;
+    text-align: center;
+}
+
+.no-complaints-icon {
+    width: 48px;
+    height: 48px;
+    color: #9ca3af;
+    margin-bottom: 1rem;
+    display: inline-block;
+}
+
+.no-complaints h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+}
+
+.no-complaints p {
+    color: #6b7280;
+    margin-bottom: 1.5rem;
+}
+
+.submit-first-btn {
+    display: inline-block;
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.submit-first-btn:hover {
+    background-color: #4338ca;
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .navbar {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 1rem;
+    }
+
+    .nav-links {
+        gap: 1rem;
+    }
+
+    .main-container {
+        margin-top: 130px;
+    }
+    
+    .header-container {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .complaints-table th,
+    .complaints-table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .complaints-table {
+        display: block;
+        overflow-x: auto;
+    }
+}
+</style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/home" class="logo">OrderByte</a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('search') }}">SEARCH</a>
+            <a href="{{ url_for('cart') }}">CART</a>
+            
+            <div class="avatar-container">
+                <img src="{{ user_data.get('profile_picture', url_for('static', filename='img/default-avatar.png')) }}" alt="User Avatar" class="avatar" onclick="toggleDropdown()">
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{ url_for('profile') }}">PROFILE</a>
+                    <a href="{{ url_for('complaint_history') }}">COMPLAINTS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <div class="header-container">
+            <h1 class="page-title">Complaint History</h1>
+            <a href="{{ url_for('complaint') }}" class="new-complaint-btn">Submit New Complaint</a>
+        </div>
+        
+        {% if from_submission %}
+        <div class="success-message">
+            <div class="success-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
+                </svg>
+            </div>
+            <p>Your complaint has been submitted successfully. We will review it shortly.</p>
+        </div>
+        {% endif %}
+        
+        {% if complaints %}
+            <div class="complaints-table-container">
+                <table class="complaints-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for complaint in complaints %}
+                        <tr>
+                            <td>{{ complaint.id }}</td>
+                            <td>{{ complaint.date }}</td>
+                            <td>{{ complaint.type_display }}</td>
+                            <td>
+                                <span class="status-badge status-{{ complaint.status }}">
+                                    {{ complaint.status|capitalize }}
+                                </span>
+                            </td>
+                            <td>
+                                <a href="{{ url_for('complaint_detail', complaint_id=complaint.id) }}" class="view-btn">View Details</a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="no-complaints">
+                <svg xmlns="http://www.w3.org/2000/svg" class="no-complaints-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <h3>No complaints found</h3>
+                <p>You haven't submitted any complaints yet.</p>
+                <a href="{{ url_for('complaint') }}" class="submit-first-btn">Submit Your First Complaint</a>
+            </div>
+        {% endif %}
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    // Toggle dropdown menu
+    window.toggleDropdown = function() {
+        const dropdown = document.getElementById('dropdownMenu');
+        dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    };
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('dropdownMenu');
+        
+        if (!event.target.closest('.avatar-container')) {
+            dropdown.style.display = 'none';
+        }
+    });
+    
+    // Auto-hide success message after 5 seconds
+    const successMessage = document.querySelector('.success-message');
+    if (successMessage) {
+        setTimeout(function() {
+            successMessage.style.opacity = '0';
+            successMessage.style.transition = 'opacity 0.5s ease';
+            
+            setTimeout(function() {
+                successMessage.style.display = 'none';
+            }, 500);
+        }, 5000);
+    }
+});
+    </script>
+</body>
+</html>

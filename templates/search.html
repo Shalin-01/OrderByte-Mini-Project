@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderByte - Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='search.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo">OrderByte</a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('search') }}">SEARCH</a>
+            <a href="{{ url_for('cart') }}">CART</a>            
+            <div class="avatar-container">
+                <img id="navAvatar" src="{{ user_data.get('profile_picture', '/static/uploads/default_user.png') if user_data else '/static/uploads/default_user.png' }}"
+                     alt="User Avatar" 
+                     class="avatar" 
+                     onclick="toggleDropdown()">
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{url_for('profile')}}">PROFILE</a>
+                    <a href="{{ url_for('complaint_history') }}">COMPLAINTS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="search-container">
+            <input type="text" class="search-box" placeholder="Search for food items..." id="searchInput">
+            <div class="filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <button class="filter-btn" data-category="breakfast">Breakfast</button>
+                <button class="filter-btn" data-category="lunch">Lunch</button>
+                <button class="filter-btn" data-category="drinks">Drinks</button>
+                <button class="filter-btn" data-category="desserts">Desserts</button>
+                <button class="filter-btn" data-category="curry">Curry</button>
+                <button class="filter-btn" data-category="in-stock">In Stock Only</button>
+            </div>
+        </div>
+        <div class="results-grid" id="searchResults">
+            <div class="loading">Loading menu items...</div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/search.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+
+</body>
+</html>

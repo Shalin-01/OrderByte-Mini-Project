@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ORDERBYTE - My Cart</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='cart.css') }}">
+</head>
+<body>
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo">OrderByte</a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('search') }}">SEARCH</a>
+            <a href="{{ url_for('cart') }}" class="nav-cart">CART</a>
+            <div class="avatar-container">
+                <img src="{{ user_data.get('profile_picture') }}" alt="User Avatar" class="avatar" onclick="toggleDropdown()">
+                <div class="dropdown-menu" id="dropdownMenu">   
+                    <a href="{{url_for('profile')}}">PROFILE</a> 
+                    <a href="{{ url_for('complaint_history') }}">COMPLAINTS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="cart-items" id="cartItems">
+            <!-- Cart items will be loaded dynamically -->
+            <!-- This will be populated by JavaScript -->
+        </div>
+
+        <div class="cart-summary">
+            <h2>MY CART</h2>
+            <div class="summary-row">
+                <span>Subtotal</span>
+                <span id="subtotal">₹0</span>
+            </div>
+            <div class="summary-row total-row">
+                <span>Total</span>
+                <span id="total">₹0</span>
+            </div>
+            <button class="btn btn-primary" id="proceedToPayBtn" >Proceed To Pay</button>
+            <button class="btn btn-secondary" id="continueShopping" data-home-url="{{ url_for('home') }}">Continue Shopping</button>
+        </div>
+    </div>
+
+    <!-- Include both cart.js and a script for the dropdown function -->
+    <script src="{{ url_for('static', filename='js/cart.js') }}"></script>
+    <!-- Add this script tag to include Razorpay SDK -->
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</body>
+</html>

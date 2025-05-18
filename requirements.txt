@@ -1,0 +1,10 @@
+Flask
+firebase-admin
+python-dotenv
+gunicorn
+requests
+reportlab
+razorpay
+python-dateutil
+smtplib
+python-json-logger

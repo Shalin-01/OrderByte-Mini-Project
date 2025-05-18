@@ -1,0 +1,1274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ORDERBYTE - User Profile</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      background-color: #f7f7f7;
+      color: #333;
+    }
+
+    /* Navbar styling - keeping black and white as requested */
+    .navbar {
+    background-color: black;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+/* Avatar & Dropdown */
+.avatar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.avatar:hover {
+    border-color: #ffd700;
+}
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    background: rgb(64, 63, 63);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 180px;
+    z-index: 100;
+    overflow: hidden;
+    animation: dropdownFade 0.2s ease-out;
+}
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+}
+.dropdown-menu a {
+    display: flex;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.756);
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f0f0f0;
+    height: auto;
+    transition: background-color 0.2s;
+}
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f8f8;
+    color: #000;
+}
+
+
+    /* Profile section - Enhanced */
+    .main-container {
+      max-width: 1200px;
+      margin: 100px auto 40px;
+      padding: 0 20px;
+    }
+
+    .page-title {
+      text-align: center;
+      margin-bottom: 30px;
+      color: #333;
+      position: relative;
+      font-size: 2rem;
+    }
+
+    .page-title:after {
+      content: '';
+      display: block;
+      width: 80px;
+      height: 4px;
+      background: linear-gradient(90deg, #ffd700, #ff9500);
+      margin: 10px auto 0;
+      border-radius: 2px;
+    }
+
+    .profile-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      margin-bottom: 40px;
+      transition: transform 0.3s;
+    }
+
+    .profile-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .profile-header {
+      background: linear-gradient(135deg, #000000, #444);
+      padding: 40px 20px 30px;
+      text-align: center;
+      color: white;
+      position: relative;
+    }
+
+    .profile-image-container {
+      position: relative;
+      width: 150px;
+      height: 150px;
+      margin: 0 auto 20px;
+    }
+
+    .profile-image {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 4px solid white;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      transition: transform 0.3s;
+    }
+
+    .profile-image:hover {
+      transform: scale(1.03);
+    }
+
+    .image-upload {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background-color: #ffd700;
+      color: #333;
+      padding: 8px;
+      border-radius: 50%;
+      cursor: pointer;
+      width: 35px;
+      height: 35px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+      transition: transform 0.2s, background-color 0.2s;
+      z-index: 5;
+    }
+
+    .image-upload:hover {
+      transform: scale(1.1) rotate(5deg);
+      background-color: white;
+    }
+
+    .image-upload input {
+      display: none;
+    }
+
+    .profile-content {
+      padding: 30px;
+    }
+
+    .profile-form {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: #555;
+      font-size: 0.95rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.9rem;
+      border: 1px solid #e0e0e0;
+      border-radius: 8px;
+      transition: all 0.2s;
+      font-size: 1rem;
+      background-color: #fafafa;
+    }
+
+    .form-group input:focus {
+      border-color: #ffd700;
+      box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.2);
+      outline: none;
+    }
+
+    .form-group input:hover {
+      border-color: #ddd;
+    }
+
+    .save-btn {
+      background: linear-gradient(to right, #333, #111);
+      color: white;
+      border: none;
+      padding: 0.9rem 2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      margin-top: 1.5rem;
+      transition: all 0.3s;
+      display: block;
+      width: 100%;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .save-btn:hover {
+      background: linear-gradient(to right, #222, #000);
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .save-btn:active {
+      transform: translateY(0);
+    }
+
+    .save-btn::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 5px;
+      height: 5px;
+      background: rgba(255, 255, 255, 0.5);
+      opacity: 0;
+      border-radius: 100%;
+      transform: scale(1, 1) translate(-50%);
+      transform-origin: 50% 50%;
+    }
+
+    .save-btn:focus:not(:active)::after {
+      animation: ripple 1s ease-out;
+    }
+
+    @keyframes ripple {
+      0% {
+        transform: scale(0, 0);
+        opacity: 0.5;
+      }
+      20% {
+        transform: scale(25, 25);
+        opacity: 0.3;
+      }
+      100% {
+        opacity: 0;
+        transform: scale(40, 40);
+      }
+    }
+
+    .status-message {
+      margin-top: 1rem;
+      padding: 0.9rem;
+      border-radius: 8px;
+      display: none;
+      font-weight: 500;
+      transition: all 0.3s;
+    }
+
+    .status-success {
+      background-color: #d4edda;
+      color: #155724;
+      border-left: 4px solid #28a745;
+      display: block;
+    }
+
+    .status-error {
+      background-color: #f8d7da;
+      color: #721c24;
+      border-left: 4px solid #dc3545;
+      display: block;
+    }
+
+    /* Orders section - Enhanced */
+    .orders-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .orders-card:hover {
+      transform: translateY(-5px);
+    }
+
+    .orders-header {
+      background: linear-gradient(135deg, #2c2c2c, #444);
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+
+    .orders-header h2 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: 1px;
+    }
+
+    .orders-content {
+      padding: 20px;
+      overflow-x: auto;
+    }
+
+    .orders-table {
+      width: 100%;
+      border-collapse: separate;
+      border-spacing: 0;
+      box-shadow: none;
+    }
+
+    .orders-table th,
+    .orders-table td {
+      padding: 1rem 1.5rem;
+      text-align: left;
+      border-bottom: 1px solid #eee;
+    }
+
+    .orders-table th {
+      background-color: #f9f9f9;
+      color: #333;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .orders-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .orders-table tbody tr {
+      transition: background-color 0.2s;
+    }
+
+    .orders-table tbody tr:hover {
+      background-color: #f9f9f9;
+    }
+
+    .order-id {
+      font-weight: 600;
+      color: #333;
+      position: relative;
+      padding-left: 8px;
+    }
+
+    .order-id::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 3px;
+      height: 70%;
+      background-color: #ffd700;
+      border-radius: 3px;
+    }
+
+    .amount {
+      font-weight: 600;
+      color: #28a745;
+    }
+
+    .empty-orders {
+      text-align: center;
+      padding: 40px 20px;
+      color: #777;
+      font-style: italic;
+    }
+
+    /* Responsive styles */
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: row;
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      .nav-links {
+        gap: 1rem;
+      }
+
+      .main-container {
+        margin-top: 130px;
+      }
+
+      .profile-image-container {
+        width: 120px;
+        height: 120px;
+      }
+      
+      .orders-table th,
+      .orders-table td {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .profile-header {
+        padding: 30px 15px 20px;
+      }
+      
+      .profile-content,
+      .orders-content {
+        padding: 20px 15px;
+      }
+      
+      .profile-image-container {
+        width: 100px;
+        height: 100px;
+      }
+      
+      .page-title {
+        font-size: 1.6rem;
+      }
+    }
+    /* Invoice icon styling - matches the existing design system */
+    .invoice-icon {
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      transition: transform 0.2s ease, opacity 0.2s;
+      opacity: 0.8;
+    }
+
+    .invoice-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #f8f8f8;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .invoice-link:hover {
+      background-color: #ffd700;
+      transform: scale(1.1);
+    }
+
+    .invoice-link:hover .invoice-icon {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+
+    .action-icons {
+      display: flex;
+      gap: 8px;
+      justify-content: flex-end;
+    }
+
+    /* Animation for invoice download */
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    .invoice-link:active .invoice-icon {
+      animation: pulse 0.3s ease-in-out;
+    }
+
+    /* Status badges */
+    .status-badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .status-paid {
+      background-color: #d4edda;
+      color: #155724;
+    }
+
+    .status-cancelled {
+      background-color: #f8d7da;
+      color: #721c24;
+    }
+
+    .status-processing {
+      background-color: #fff3cd;
+      color: #856404;
+    }
+
+    /* Cancellable indicator */
+    .cancellable-badge {
+      display: inline-block;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.7rem;
+      background-color: #fff3cd;
+      color: #856404;
+      margin-top: 4px;
+    }
+
+    /* Cancel button */
+    .cancel-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #f8f8f8;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .cancel-btn:hover {
+      background-color: #ffebee;
+      transform: scale(1.1);
+    }
+
+    .cancel-icon {
+      width: 20px;
+      height: 20px;
+      color: #e53935;
+    }
+
+    /* View button */
+    .view-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background-color: #f8f8f8;
+      border: none;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.2s;
+    }
+
+    .view-btn:hover {
+      background-color: #e3f2fd;
+      transform: scale(1.1);
+    }
+
+    .view-icon {
+      width: 20px;
+      height: 20px;
+      color: #2196f3;
+    }
+
+    /* Tabs */
+    .tabs {
+      display: flex;
+      margin-bottom: 30px;
+      border-bottom: 1px solid #ddd;
+      justify-content: center;
+    }
+
+    .tab {
+      padding: 12px 24px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s;
+    }
+
+    .tab:hover {
+      color: #333;
+    }
+
+    .tab.active {
+      color: #000;
+      border-bottom-color: #ffd700;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      animation: modalFade 0.3s;
+    }
+
+    @keyframes modalFade {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 1.5rem;
+    }
+
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .modal-btn-cancel {
+      background-color: white;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    .modal-btn-cancel:hover {
+      background-color: #f5f5f5;
+    }
+
+    .modal-btn-confirm {
+      background-color: #e53935;
+      color: white;
+      border: none;
+    }
+
+    .modal-btn-confirm:hover {
+      background-color: #c62828;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar - Kept black and white as requested -->
+  <nav class="navbar">
+    <a href="{{ url_for('home') }}" class="logo">OrderByte</a>
+    <div class="nav-links">
+      <a href="{{ url_for('home') }}">HOME</a>
+      <a href="{{ url_for('search') }}">SEARCH</a>
+      <a href="{{ url_for('cart') }}">CART</a>
+      <div class="avatar-container">
+        <img id="navAvatar" src="{{ user_data.get('profile_picture', '/static/uploads/default_user.png') if user_data else '/static/uploads/default_user.png' }}"
+          alt="User Avatar"
+          class="avatar"
+          onclick="toggleDropdown()"
+        />
+        <div class="dropdown-menu" id="dropdownMenu">
+          <a href="{{ url_for('profile') }}">PROFILE</a>
+          <a href="{{ url_for('complaint_history') }}">COMPLAINTS</a>
+          <a href="{{ url_for('logout') }}">LOGOUT</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main-container">
+    <h1 class="page-title">My Profile</h1>
+    
+    <!-- Tabs -->
+    <div class="tabs">
+      <div class="tab active" data-tab="profile">Profile</div>
+      <div class="tab" data-tab="orders">Order History</div>
+    </div>
+    
+    <!-- Profile Section - Enhanced -->
+    <div id="profile-tab" class="tab-content active">
+      <div class="profile-card">
+        <div class="profile-header">
+          <div class="profile-image-container">
+            <img id="profileImage" src="{{ user_data.get('profile_picture', '/static/uploads/default_user.png') if user_data else '/static/uploads/default_user.png' }}" alt="Profile Picture" class="profile-image" />
+            <label class="image-upload">
+              <input type="file" id="profileImageUpload" accept="image/*" />
+              📷
+            </label>
+          </div>
+          <h2>{{ user_data.get('name', 'User') if user_data else 'User' }}</h2>
+        </div>
+        <div class="profile-content">
+          <form id="profileForm" class="profile-form">
+            <input type="hidden" id="userId" value="{{ user_id }}">
+            <div class="form-group">
+              <label for="nameInput">Name:</label>
+              <input type="text" id="nameInput" value="{{ user_data.get('name', '') if user_data else '' }}" required>
+            </div>
+            <div class="form-group">
+              <label for="emailInput">Email:</label>
+              <input type="email" id="emailInput" value="{{ user_data.get('email', '') if user_data else '' }}" readonly required style="background-color: #f0f0f0;">
+            </div>
+            <div class="form-group">
+              <label for="phoneInput">Phone Number:</label>
+              <input type="tel" id="phoneInput" value="{{ user_data.get('phone', '') if user_data else '' }}">
+            </div>
+            <button type="submit" class="save-btn">Save Changes</button>
+            <div id="statusMessage" class="status-message"></div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Orders Section - Enhanced -->
+    <div id="orders-tab" class="tab-content">
+      <div class="orders-card">
+        <div class="orders-header">
+          <h2>MY ORDERS</h2>
+        </div>
+        <div class="orders-content">
+          <table class="orders-table">
+            <thead>
+              <tr>
+                <th>DATE</th>
+                <th>ORDER ID</th>
+                <th>ITEMS</th>
+                <th>AMOUNT</th>
+                <th>STATUS</th>
+                <th>ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTableBody">
+              {% if orders %}
+                {% for order in orders %}
+                <tr>
+                  <td>
+                    {{ order.get('date', '') }}
+                    <div style="font-size: 0.8rem; color: #666;">{{ order.get('time', '') }}</div>
+                  </td>
+                  <td class="order-id">#{{ order.get('order_id', '')[:8] }}</td>
+                  <td class="items">
+                    {% if order.get('items') %}
+                      {% if order.get('item_list') %}
+                        {{ order.get('item_list')|join(', ') }}
+                      {% else %}
+                        {% set item_count = order.get('items')|length %}
+                        {{ item_count }} item{% if item_count != 1 %}s{% endif %}
+                      {% endif %}
+                    {% endif %}
+                  </td>
+                  <td class="amount">₹{{ order.get('amount', '0.00') }}</td>
+                  <td>
+                    <span class="status-badge status-{{ order.get('status', 'processing') }}">
+                      {{ order.get('status', 'processing').upper() }}
+                    </span>
+                    {% if order.get('status') == 'cancelled' %}
+                     
+                    {% endif %}
+                    {% if order.get('cancellable') %}
+                    <div class="cancellable-badge">
+                      Cancellable ({{ order.get('minutes_left') }}m)
+                    </div>
+                    {% endif %}
+                  </td>
+                  <td>
+                    <div class="action-icons">
+                      <a href="/order-confirmation/{{ order.get('order_id', '') }}" class="view-btn" title="View Order">
+                        <svg class="view-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="2"></circle>
+                        <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7z"></path>
+                      </svg>
+                      </a>
+                      <a href="/download-invoice/{{ order.get('order_id', '') }}" class="invoice-link" title="Download Invoice">
+                        <svg class="invoice-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                          <polyline points="7 10 12 15 17 10"></polyline>
+                          <line x1="12" y1="15" x2="12" y2="3"></line>
+                        </svg>
+                      </a>
+                      {% if order.get('cancellable') %}
+                      <button class="cancel-btn" title="Cancel Order" onclick="openCancelModal('{{ order.get('order_id','') }}')">
+                        <svg class="cancel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <circle cx="12" cy="12" r="10"></circle>
+                          <line x1="15" y1="9" x2="9" y2="15"></line>
+                          <line x1="9" y1="9" x2="15" y2="15"></line>
+                        </svg>
+                      </button>
+                      {% endif %}
+                    </div>
+                  </td>
+                </tr>
+                {% endfor %}
+              {% else %}
+                <tr>
+                  <td colspan="6" class="empty-orders">No orders found</td>
+                </tr>
+              {% endif %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Cancel Order Modal -->
+  <div id="cancelModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Cancel Order</h2>
+        <span class="close" onclick="closeCancelModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+        <p>A refund will be processed to your original payment method.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeCancelModal()">No, Keep Order</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmCancelOrder()">Yes, Cancel Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+    let currentOrderId = '';
+    
+    // Toggle dropdown menu
+    function toggleDropdown() {
+      const dropdown = document.getElementById('dropdownMenu');
+      dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('dropdownMenu');
+      if (!event.target.closest('.avatar-container')) {
+        dropdown.style.display = 'none';
+      }
+    });
+
+    // Tab functionality
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', function() {
+        // Remove active class from all tabs
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        // Add active class to clicked tab
+        this.classList.add('active');
+        
+        // Hide all tab content
+        document.querySelectorAll('.tab-content').forEach(content => {
+          content.classList.remove('active');
+        });
+        
+        // Show the corresponding tab content
+        const tabId = this.getAttribute('data-tab');
+        document.getElementById(tabId + '-tab').classList.add('active');
+      });
+    });
+
+    
+// Form submission
+document.getElementById('profileForm').addEventListener('submit', function(e) {
+  e.preventDefault();
+  
+  const userId = document.getElementById('userId').value;
+  const nameInput = document.getElementById('nameInput').value;
+  const emailInput = document.getElementById('emailInput').value;
+  const phoneInput = document.getElementById('phoneInput').value;
+  
+  const formData = new FormData();
+  formData.append('name', nameInput);
+  formData.append('email', emailInput);
+  formData.append('phone', phoneInput);
+  
+  // Also include profile picture if selected
+  const fileInput = document.getElementById('profileImageUpload');
+  if (fileInput.files.length > 0) {
+    formData.append('profile_picture', fileInput.files[0]);
+  }
+  
+  // Send data to server
+  fetch(`/api/user/${userId}/profile`, {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.success) {
+      // If profile picture was updated, update UI
+      if (data.data && data.data.profile_picture) {
+        document.getElementById('profileImage').src = data.data.profile_picture;
+        document.getElementById('navAvatar').src = data.data.profile_picture;
+      }
+      showStatus('Profile updated successfully!', 'success');
+    } else {
+      showStatus('Error updating profile: ' + data.error, 'error');
+    }
+  })
+  .catch(error => {
+    showStatus('Error: ' + error.message, 'error');
+  });
+});
+
+// Preview profile image before upload
+document.getElementById('profileImageUpload').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  
+  // Show image preview
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('profileImage').src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+  
+  // Note: We don't immediately upload the image here, 
+  // it will be uploaded with the form submission
+});
+
+// Helper function to show status message
+function showStatus(message, type) {
+  const statusElement = document.getElementById('statusMessage');
+  statusElement.textContent = message;
+  statusElement.className = 'status-message';
+  
+  if (type === 'success') {
+    statusElement.classList.add('status-success');
+  } else {
+    statusElement.classList.add('status-error');
+  }
+  
+  // Auto hide success messages after 3 seconds
+  if (type === 'success') {
+    setTimeout(() => {
+      statusElement.textContent = '';
+    }, 3000);
+  }
+}
+
+    // Function to open cancel modal
+    function openCancelModal(orderId) {
+      currentOrderId = orderId;
+      document.getElementById('cancelModal').style.display = 'block';
+    }
+    
+    // Function to close cancel modal
+    function closeCancelModal() {
+      document.getElementById('cancelModal').style.display = 'none';
+    }
+    
+    // Function to confirm order cancellation
+    function confirmCancelOrder() {
+      if (!currentOrderId) return;
+      
+      // Show loading state
+      const confirmButton = document.querySelector('.modal-btn-confirm');
+      const originalText = confirmButton.textContent;
+      confirmButton.textContent = 'Processing...';
+      confirmButton.disabled = true;
+      
+      // Send cancellation request to server
+      fetch(`/api/orders/${currentOrderId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        closeCancelModal();
+        
+        if (data.success) {
+          // Reload the page to show updated status
+          window.location.reload();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to cancel order'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while cancelling the order. Please try again.');
+      })
+      .finally(() => {
+        // Reset button state
+        confirmButton.textContent = originalText;
+        confirmButton.disabled = false;
+      });
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('cancelModal');
+      if (event.target === modal) {
+        closeCancelModal();
+      }
+    }
+
+// Function to fetch orders
+function fetchOrders() {
+  const userId = document.getElementById("userId").value
+
+  fetch(`/api/user/${userId}/orders`)
+    .then((response) => response.json())
+    .then((data) => {
+      if (data.orders && data.orders.length > 0) {
+        updateOrdersTable(data.orders)
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching orders:", error)
+    })
+}
+
+// Update orders table with new data
+function updateOrdersTable(orders) {
+  const tableBody = document.getElementById("ordersTableBody")
+  tableBody.innerHTML = ""
+
+  if (orders.length === 0) {
+    const row = document.createElement("tr")
+    row.innerHTML = '<td colspan="6" class="empty-orders">No orders found</td>'
+    tableBody.appendChild(row)
+    return
+  }
+
+  orders.forEach((order) => {
+    const row = document.createElement("tr")
+
+    // Create the date cell with time
+    const dateCell = document.createElement("td")
+    dateCell.innerHTML = `
+      ${order.date || ""}
+      <div style="font-size: 0.8rem; color: #666;">${order.time || ""}</div>
+    `
+
+    // Create the order ID cell
+    const orderIdCell = document.createElement("td")
+    orderIdCell.className = "order-id"
+    orderIdCell.textContent = `#${(order.order_id || "").substring(0, 8)}`
+
+    // Create the items cell
+    const itemsCell = document.createElement("td")
+    itemsCell.className = "items"
+    if (order.item_list && order.item_list.length > 0) {
+      itemsCell.textContent = order.item_list.join(", ")
+    } else if (order.items) {
+      const itemCount = Object.keys(order.items).length
+      itemsCell.textContent = `${itemCount} item${itemCount !== 1 ? "s" : ""}`
+    }
+
+    // Create the amount cell
+    const amountCell = document.createElement("td")
+    amountCell.className = "amount"
+    // Format the amount to 2 decimal places
+    const formattedAmount = Number.parseFloat(order.amount || 0).toFixed(2)
+    amountCell.textContent = `₹${formattedAmount}`
+
+    // Create the status cell
+    const statusCell = document.createElement("td")
+    const statusBadge = document.createElement("span")
+    statusBadge.className = `status-badge status-${order.status || "processing"}`
+    statusBadge.textContent = (order.status || "processing").toUpperCase()
+    statusCell.appendChild(statusBadge)
+
+    // Add cancellable badge if applicable
+    if (order.cancellable) {
+      const cancellableBadge = document.createElement("div")
+      cancellableBadge.className = "cancellable-badge"
+      cancellableBadge.textContent = `Cancellable (${order.minutes_left}m)`
+      statusCell.appendChild(cancellableBadge)
+    }
+
+    // Create the actions cell
+    const actionsCell = document.createElement("td")
+    const actionIcons = document.createElement("div")
+    actionIcons.className = "action-icons"
+
+    // View button
+    const viewLink = document.createElement("a")
+    viewLink.href = `/order-confirmation/${order.order_id}`
+    viewLink.className = "view-btn"
+    viewLink.title = "View Order"
+    viewLink.innerHTML = `
+      <svg class="view-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="2"></circle>
+        <path d="M22 12c-2.667 4.667-6 7-10 7s-7.333-2.333-10-7c2.667-4.667 6-7 10-7s7.333 2.333 10 7z"></path>
+      </svg>
+    `
+    actionIcons.appendChild(viewLink)
+
+    // Invoice button
+    const invoiceLink = document.createElement("a")
+    invoiceLink.href = `/download-invoice/${order.order_id}`
+    invoiceLink.className = "invoice-link"
+    invoiceLink.title = "Download Invoice"
+    invoiceLink.innerHTML = `
+      <svg class="invoice-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+        <polyline points="7 10 12 15 17 10"></polyline>
+        <line x1="12" y1="15" x2="12" y2="3"></line>
+      </svg>
+    `
+    actionIcons.appendChild(invoiceLink)
+
+    // Cancel button (if applicable)
+    if (order.cancellable) {
+      const cancelButton = document.createElement("button")
+      cancelButton.className = "cancel-btn"
+      cancelButton.title = "Cancel Order"
+      cancelButton.setAttribute("onclick", `openCancelModal('${order.order_id}')`)
+      cancelButton.innerHTML = `
+        <svg class="cancel-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+      `
+      actionIcons.appendChild(cancelButton)
+    }
+
+    actionsCell.appendChild(actionIcons)
+
+    // Append all cells to the row
+    row.appendChild(dateCell)
+    row.appendChild(orderIdCell)
+    row.appendChild(itemsCell)
+    row.appendChild(amountCell)
+    row.appendChild(statusCell)
+    row.appendChild(actionsCell)
+
+    // Append the row to the table body
+    tableBody.appendChild(row)
+  })
+}
+
+// Call fetchOrders when the page loads
+document.addEventListener("DOMContentLoaded", fetchOrders)
+
+    // Check authentication on page load
+    window.onpageshow = function(event) {
+      // If page is loaded from cache (like using back button)
+      if (event.persisted) {
+        // Make an AJAX request to check authentication
+        fetch('/check_auth')
+          .then(response => response.json())
+          .then(data => {
+            if (!data.authenticated) {
+              window.location.href = '/signin';
+            }
+          });
+      }
+    };
+  </script>
+
+</body>
+</html>

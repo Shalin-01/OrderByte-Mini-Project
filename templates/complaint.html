@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit a Complaint - OrderByte</title>
+<style>
+:root {
+    --primary-color: #4f46e5;
+    --primary-hover: #4338ca;
+    --text-color: #1f2937;
+    --light-gray: #f3f4f6;
+    --border-color: #d1d5db;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;}
+
+body {
+    color: var(--text-color);
+    line-height: 1.5;
+    background-color: #f7f7f7;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: black;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+}
+
+.logo {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+    align-items: center;
+}
+
+.nav-links a {
+    color: white;
+    text-decoration: none;
+    transition: color 0.3s;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+
+.nav-links a:hover {
+    color: #ffd700;
+}
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    object-fit: cover;
+    border: 2px solid transparent;
+    transition: border-color 0.3s;
+}
+/* Avatar & Dropdown */
+.avatar-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 40px;
+}
+.avatar:hover {
+    border-color: #ffd700;
+}
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    top: calc(100% + 10px);
+    background: rgb(64, 63, 63);
+    border: none;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-radius: 8px;
+    width: 180px;
+    z-index: 100;
+    overflow: hidden;
+    animation: dropdownFade 0.2s ease-out;
+}
+@keyframes dropdownFade {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+.dropdown-menu::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    right: 16px;
+    width: 12px;
+    height: 12px;
+    background: #ffd700;
+    transform: rotate(45deg);
+    box-shadow: -2px -2px 4px rgba(0, 0, 0, 0.05);
+}
+.dropdown-menu a {
+    display: flex;
+    padding: 12px 16px;
+    text-decoration: none;
+    color: white;
+    background-color: rgba(0, 0, 0, 0.756);
+    font-size: 0.95rem;
+    border-bottom: 1px solid #f0f0f0;
+    height: auto;
+    transition: background-color 0.2s;
+}
+.dropdown-menu a:last-child {
+    border-bottom: none;
+}
+
+.dropdown-menu a:hover {
+    background-color: #f8f8f8;
+    color: #000;
+}
+
+
+/* Main container */
+.main-container {
+    max-width: 800px;
+    margin: 100px auto 40px;
+    padding: 0 20px;
+}
+
+.page-title {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #333;
+    position: relative;
+    font-size: 2rem;
+}
+
+.page-title:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(90deg, #ffd700, #ff9500);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
+
+/* Form container */
+.form-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+input[type="text"],
+input[type="email"],
+select,
+textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 0.375rem;
+    font-size: 1rem;
+}
+
+textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.file-upload {
+    margin-top: 0.5rem;
+}
+
+.file-upload-label {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--light-gray);
+    border-radius: 0.375rem;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.file-upload-input {
+    display: none;
+}
+
+.file-names {
+    margin-top: 0.5rem;
+    font-size: 0.875rem;
+}
+
+.submit-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.2s;
+}
+
+.submit-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.required::after {
+    content: "*";
+    color: #ef4444;
+    margin-left: 0.25rem;
+}
+
+.preview-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.image-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 4px;
+    border: 1px solid var(--border-color);
+}
+
+small {
+    display: block;
+    margin-top: 0.25rem;
+    color: #6b7280;
+    font-size: 0.875rem;
+}
+
+
+@media (max-width: 640px) {
+    .form-container {
+        padding: 1rem;
+    }
+    
+    .navbar {
+        padding: 1rem;
+    }
+    
+    .nav-links {
+        gap: 1rem;
+    }
+}
+</style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <a href="/home" class="logo">OrderByte</a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('search') }}">SEARCH</a>
+            <a href="{{ url_for('cart') }}">CART</a>
+            
+            <div class="avatar-container">
+                <img src="{{ user_data.get('profile_picture', url_for('static', filename='img/default-avatar.png')) }}" alt="User Avatar" class="avatar" onclick="toggleDropdown()">
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{ url_for('profile') }}">PROFILE</a>
+                    <a href="{{ url_for('complaint_history') }}">COMPLAINTS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="main-container">
+        <h1 class="page-title">Submit a Complaint</h1>
+        
+   
+        
+        <div class="form-container">
+            <form id="complaintForm" action="{{ url_for('submit_complaint') }}" method="POST" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="orderNumber">Order Number (if applicable)</label>
+                    <input type="text" id="orderNumber" name="orderNumber" placeholder="Enter your order number">
+                </div>
+                
+                <div class="form-group">
+                    <label for="userEmail">Your Email Address</label>
+                    <input type="email" id="userEmail" name="userEmail" value="{{ user_data.get('email', '') }}" placeholder="Enter your email for updates">
+                    <small>We'll send you updates about your complaint to this email.</small>
+                </div>
+                
+                <div class="form-group">
+                    <label for="complaintType" class="required">Complaint Type</label>
+                    <select id="complaintType" name="complaintType" required>
+                        <option value="" disabled selected>Select a complaint type</option>
+                        <option value="product">Food Issue</option>
+                        <option value="service">Customer Service</option>
+                        <option value="billing">Billing Issue</option>
+                        <option value="website">Website Problem</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="description" class="required">Description</label>
+                    <textarea id="description" name="description" placeholder="Please describe your complaint in detail" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Upload Images</label>
+                    <div class="file-upload">
+                        <label for="images" class="file-upload-label">Choose Files</label>
+                        <input type="file" id="images" name="images" class="file-upload-input" accept="image/*" multiple>
+                        <div id="fileNames" class="file-names"></div>
+                        <div id="imagePreview" class="preview-container"></div>
+                    </div>
+                </div>
+                
+                <button type="submit" class="submit-btn">Submit Complaint</button>
+            </form>
+        </div>
+    </div>
+
+    <script >
+    document.addEventListener('DOMContentLoaded', function() {
+        // Toggle dropdown menu
+        window.toggleDropdown = function() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        };
+        
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('dropdownMenu');
+            
+            if (!event.target.closest('.avatar-container')) {
+                dropdown.style.display = 'none';
+            }
+        });
+        
+        // Handle file selection and preview
+        document.getElementById('images').addEventListener('change', function(event) {
+            const fileNames = document.getElementById('fileNames');
+            const imagePreview = document.getElementById('imagePreview');
+            
+            fileNames.innerHTML = '';
+            imagePreview.innerHTML = '';
+            
+            if (this.files.length > 0) {
+                fileNames.innerHTML = `Selected ${this.files.length} file(s)`;
+                
+                for (let i = 0; i < this.files.length; i++) {
+                    const file = this.files[i];
+                    
+                    if (file.type.startsWith('image/')) {
+                        const reader = new FileReader();
+                        
+                        reader.onload = function(e) {
+                            const img = document.createElement('img');
+                            img.src = e.target.result;
+                            img.className = 'image-preview';
+                            imagePreview.appendChild(img);
+                        }
+                        
+                        reader.readAsDataURL(file);
+                    }
+                }
+            }
+        });
+        
+        // Validate form before submission
+        document.getElementById('complaintForm').addEventListener('submit', function(event) {
+            const complaintType = document.getElementById('complaintType').value;
+            const description = document.getElementById('description').value;
+            
+            if (!complaintType || !description) {
+                event.preventDefault();
+                alert('Please fill in all required fields.');
+            }
+        });
+    });
+    </script>
+</body>
+</html>

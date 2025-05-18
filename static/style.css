@@ -1,0 +1,323 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    background-color:rgb(248, 248, 248);
+    color: #f8f8f8;
+    animation: fadeIn 1.2s ease-in-out;
+    overflow-x: hidden;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 25px;
+    background: #000000;
+    border-bottom: 2px solid #333;
+    font-family: 'PT Sans', sans-serif;
+    font-weight: bold;
+    height: 60px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-grow: 1;
+}
+
+.logo img {
+    height: 56px;
+    object-fit: cover;
+    margin-left: 10px;
+    filter: brightness(1.2);
+}
+
+.college-name {
+    font-size: 20px;
+    color: white;
+    font-weight: bold;
+    margin-right: 20px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    letter-spacing: 0.5px;
+}
+
+.content-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 70vh;
+    padding: 40px 20px;
+    position: relative;
+    background: url('{{ url_for("static", filename="img/food-bg.jpg") }}') center/cover no-repeat fixed;
+}
+
+.content-section::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: -1;
+}
+
+.order-box {
+    text-align: center;
+    margin-bottom: 30px;
+    animation: bounceIn 1.2s ease-in-out;
+    padding: 30px 50px;
+    border-radius: 15px;
+    
+}
+
+@keyframes bounceIn {
+    0% { transform: scale(0.5); opacity: 0; }
+    50% { transform: scale(1.1); opacity: 1; }
+    100% { transform: scale(1); }
+}
+
+.order-box h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 4rem;
+    margin: 10px 0;
+    color: rgb(0, 0, 0);
+    text-shadow: 0 0 10px rgba(255,255,255,0.3);
+    position: relative;
+    display: inline-block;
+}
+
+.order-box h1::after {
+    content: "Fast. Easy. Delicious.";
+    position: absolute;
+    bottom: -15px;
+    left: 0;
+    right: 0;
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 300;
+    color: #424242;
+    letter-spacing: 3px;
+}
+
+.line {
+    width: 100%;
+    height: 4px;
+    margin: 15px auto;
+    background: repeating-linear-gradient(45deg, #333, #333 10px, transparent 10px, transparent 20px);
+    animation: moveLine 3s linear infinite;
+    border-radius: 4px;
+}
+
+@keyframes moveLine {
+    from { background-position: 0 0; }
+    to { background-position: 40px 0; }
+}
+
+.order-btn {
+    display: inline-block;
+    padding: 15px 35px;
+    background: black;
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 600;
+    border-radius: 50px;
+    transition: all 0.3s ease;
+    animation: pulse 1.5s infinite;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.4);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #333;
+}
+
+.order-btn::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+    transition: all 0.5s ease;
+}
+
+.order-btn:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.5);
+    background: #111;
+    border-color: #444;
+}
+
+.order-btn:hover::before {
+    left: 100%;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.03); }
+    100% { transform: scale(1); }
+}
+
+.content-section p {
+    font-size: 22px;
+    color: #000000;
+    margin: 25px 0 40px;
+    max-width: 700px;
+    line-height: 1.8;
+    animation: slideUp 0.8s ease-out forwards;
+    animation-delay: 0.5s;
+    opacity: 0;
+    padding: 0 20px;
+}
+
+@keyframes slideUp {
+    from { 
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.content-section p span {
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    position: relative;
+}
+
+.content-section p span::after {
+    content: "";
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+    height: 2px;
+    background:black;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.3s ease;
+}
+
+.content-section:hover p span::after {
+    transform: scaleX(1);
+    transform-origin: left;
+}
+
+/* Enhanced Footer Styles */
+footer {
+    background: #000000;
+    color: white;
+    text-align: center;
+    padding: 0;
+    position: relative;
+    width: 100%;
+    font-family: 'PT Sans', sans-serif;
+    border-top: 2px solid #333;
+}
+
+.footer-content {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    align-items: center;
+    padding: 40px 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.footer-info {
+    text-align: left;
+    margin-bottom: 20px;
+}
+
+.footer-info h3 {
+    margin-bottom: 15px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: #ffffff;
+    position: relative;
+    padding-bottom: 10px;
+}
+
+.footer-info h3::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px;
+    height: 2px;
+    background: #ffffff;
+}
+
+.footer-info p {
+    color: #aaa;
+    margin: 8px 0;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.footer-info i {
+    margin-right: 10px;
+    color: #ffffff;
+}
+
+.footer-social {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+
+
+.footer-bottom {
+    padding: 15px;
+    background: rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+.footer-bottom p {
+    margin: 0;
+    font-size: 14px;
+    color: #666;
+}
+
+@media (max-width: 768px) {
+    .order-box h1 {
+        font-size: 3rem;
+    }
+    .college-name {
+        font-size: 16px;
+    }
+    .order-box {
+        padding: 20px 30px;
+    }
+    .content-section p {
+        font-size: 18px;
+    }
+    .footer-content {
+        flex-direction: column;
+        text-align: center;
+    }
+    .footer-info {
+        text-align: center;
+    }
+    .footer-info h3::after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+}

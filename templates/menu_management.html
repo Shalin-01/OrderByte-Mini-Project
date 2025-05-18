@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Management - OrderByte Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='menuman.css') }}">
+    
+</head>
+<body>
+    <nav class="navbar">
+        <a href="#" class="logo">ORDERBYTE ADMIN</a>
+        <div class="nav-links">
+            <a href="{{ url_for('menu_management') }}" class="active">MENUS</a>
+            <a href="{{ url_for('order') }}">ORDERS</a>
+
+            <div class="avatar-container">
+              <img src="{{ user_data.get('profile_picture', url_for('static', filename='img/user.png')) }}" alt="Admin Avatar" class="avatar" onclick="toggleDropdown()">
+              <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{ url_for('admin_profile') }}">PROFILE</a>
+                    <a href="{{ url_for('admin_complaints') }}">FEEDBACKS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="menu-container">
+        <div class="menu-header">
+            <h1>Menu Management</h1>
+            <button class="add-item-btn" onclick="openModal(true)">+ Add Item</button>
+        </div>
+        
+        <div class="filters">
+            <div class="filters-left">
+                <div class="search-box">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                    </svg>
+                    <input type="text" placeholder="Search menu items..." id="searchInput" onkeyup="filterItems()">
+                </div>
+                
+                <select class="filter-select" id="categoryFilter" onchange="filterItems()">
+                    <option value="">All Categories</option>
+                    <option value="Breakfast">Breakfast</option>
+                    <option value="Lunch">Lunch</option>
+                    <option value="Curry">Curry</option>
+                    <option value="Drinks">Drinks</option>
+                    <option value="Desserts">Desserts</option>
+                    {% for category in categories %}
+                    {% if category not in ['Breakfast', 'Lunch', 'Curry', 'Drinks', 'Desserts'] %}
+                    <option value="{{ category }}">{{ category }}</option>
+                    {% endif %}
+                    {% endfor %}
+                </select>
+                
+                <select class="filter-select" id="statusFilter" onchange="filterItems()">
+                    <option value="">All Items</option>
+                    <option value="in-stock">In Stock</option>
+                    <option value="special">Today's Specials</option>
+                    <option value="out-stock">Out of Stock</option>
+                </select>
+            </div>
+            
+            <div class="filters-right">
+                <label for="menu-date">Menu Date:</label>
+                <input type="date" id="menu-date">
+                <div class="quick-date-nav">
+                <button class="date-nav-btn" >‹ Previous</button>
+                <button class="date-nav-btn">Today</button>
+                <button class="date-nav-btn">Next ›</button>
+            </div>
+            </div>
+            
+        </div>
+        
+        <table class="menu-table">
+            <thead>
+                <tr>
+                    <th>IMAGE</th>
+                    <th>NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>CATEGORY</th>
+                    <th>PRICE</th>
+                    <th>STOCK</th>
+                    <th>SPECIAL</th>
+                    <th>ACTIONS</th>
+                </tr>
+            </thead>
+            <tbody id="menuItemsTable">
+                {% for item_id, item in menu_items.items() %}
+                <tr data-category="{{ item.category }}" data-special="{{ item.special|lower }}" data-instock="{{ item.in_stock|lower }}">
+                    <td>
+                        {% if item.image_url %}
+                        <img src="{{ item.image_url }}" alt="{{ item.name }}" class="item-image">
+                        {% else %}
+                        <div class="image-placeholder">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M4 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+                                <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                                <path d="M3.5 9.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v.7a.5.5 0 0 0 .79.407l1-1a.5.5 0 0 1 .79.407v1.5a.5.5 0 0 1-.79.407l-1-1a.5.5 0 0 0-.79.407V11a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1.5z"/>
+                            </svg>
+                        </div>
+                        {% endif %}
+                    </td>
+                    <td>{{ item.name }}</td>
+                    <td>{{ item.description }}</td>
+                    <td>{{ item.category }}</td>
+                    <td>
+                        <div class="price-display">
+                            {% if item.discount and item.discount > 0 %}
+                            <span>₹{{ (item.price - (item.price * item.discount / 100))|round(2) }}</span>
+                            <span class="original-price">₹{{ item.price }}</span>
+                            {% else %}
+                            <span>₹{{ item.price }}</span>
+                            {% endif %}
+                        </div>
+                    </td>
+                    <td>
+                        {% if item.in_stock %}
+                        <span class="stock-badge">{{ item.stock_count }} in stock</span>
+                        {% else %}
+                        <span class="out-stock-badge">Out of stock</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if item.special %}
+                        <span class="special-badge">Today's Special</span>
+                        {% else %}
+                        <span>No</span>
+                        {% endif %}
+                    </td>
+                    <td class="actions">
+                        <button class="action-btn edit-btn" onclick="editItem('{{ item_id }}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                            </svg>
+                        </button>
+                        <button class="action-btn delete-btn" onclick="deleteItem('{{ item_id }}')">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                                <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                            </svg>
+                        </button>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    
+    <!-- Item Modal -->
+    <div id="itemModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2 id="modalTitle">Edit Menu Item</h2>
+            
+            <form id="itemForm">
+                <input type="hidden" id="itemId">
+                
+                <div class="image-upload-container">
+                    <label>Item Image</label>
+                    <div class="image-preview" id="imagePreview">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M4 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+                            <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                            <path d="M3.5 9.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v.7a.5.5 0 0 0 .79.407l1-1a.5.5 0 0 1 .79.407v1.5a.5.5 0 0 1-.79.407l-1-1a.5.5 0 0 0-.79.407V11a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1.5z"/>
+                        </svg>
+                    </div>
+                    <label class="image-upload-btn">
+                        Upload Image
+                        <input type="file" id="itemImage" accept="image/*" style="display: none;" onchange="previewImage(this)">
+                    </label>
+                    <input type="hidden" id="imageUrl">
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemName">Name</label>
+                    <input type="text" id="itemName" class="form-control" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="itemDescription">Description</label>
+                    <textarea id="itemDescription" class="form-control" rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="itemPrice">Price (₹)</label>
+                        <input type="number" id="itemPrice" class="form-control" step="0.01" min="1" max="5000" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="discountPercent">Discount (%)</label>
+                        <input type="number" id="discountPercent" class="form-control" min="0" max="100" value="0">
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="itemCategory">Category</label>
+                        <select id="itemCategory" class="form-control" required>
+                            <option value="">Select Category</option>
+                            <option value="Breakfast">Breakfast</option>
+                            <option value="Lunch">Lunch</option>
+                            <option value="Curry">Curry</option>
+                            <option value="Drinks">Drinks</option>
+                            <option value="Desserts">Desserts</option>
+                            {% for category in categories %}
+                            {% if category not in ['Breakfast', 'Lunch', 'Curry', 'Drinks', 'Desserts'] %}
+                            <option value="{{ category }}">{{ category }}</option>
+                            {% endif %}
+                            {% endfor %}
+                            <option value="new">+ Add New Category</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="newCategoryGroup" class="form-group" style="display: none;">
+                    <label for="newCategory">New Category Name</label>
+                    <input type="text" id="newCategory" class="form-control">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="stockCount">Stock Count</label>
+                        <input type="number" id="stockCount" class="form-control" min="1" max="1000" value="0">
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="inStock" checked>
+                        <label for="inStock">In Stock</label>
+                    </div>
+                    
+                    <div class="form-group checkbox-group">
+                        <input type="checkbox" id="isSpecial">
+                        <label for="isSpecial">Today's Special</label>
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="save-btn">Save Item</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <h2>Confirm Delete</h2>
+            <p>Are you sure you want to delete this menu item?</p>
+            <div class="form-actions">
+                <button class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+                <button class="delete-confirm-btn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer with Publish Button -->
+    <div class="menu-footer">
+        <div class="footer-content">
+            <div class="publish-info">
+                <span class="last-published">Last published: <span id="lastPublishedDate">Never</span></span>
+            </div>
+            <button class="publish-btn" onclick="publishMenu()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 0C5.877 0 3.84.69 2.247 1.94a.5.5 0 1 0-.558.832A5.7 5.7 0 0 1 8 1a5.712 5.712 0 0 1 6.311 2.772.5.5 0 0 0-.558-.832A7.876 7.876 0 0 0 8 0zm2 3a2 2 0 0 1 2 2v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4zm-3 5a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                </svg>
+                Publish Menu
+            </button>
+        </div>
+    </div>
+<script>// Global variables
+  let menuItems = {} // Current date's menu items
+  let defaultMenuItems = {} // Default menu items
+  let currentItemId = null
+  let isAddMode = false
+  let isDefaultMenuMode = false // Flag to track if we're editing default menu or date-specific menu
+  const lastPublishedDates = {} // Store last published date for each date
+  let currentDate = new Date().toISOString().split("T")[0] // Track current date
+  
+  // DOM Ready
+  document.addEventListener("DOMContentLoaded", () => {
+    // Initialize date picker with today's date
+    currentDate = new Date().toISOString().split("T")[0]
+    document.getElementById("menu-date").value = currentDate
+  
+    // Set up event listeners
+    setupEventListeners()
+  
+    // Load default menu items first, then load date-specific items
+    loadDefaultMenuItems().then(() => {
+      loadMenuItemsForDate(currentDate)
+    })
+  })
+  
+  // Set up all event listeners
+  function setupEventListeners() {
+    // Add item button
+    document.querySelector(".add-item-btn").addEventListener("click", () => openModal(true))
+  
+    // Form submission
+    document.getElementById("itemForm").addEventListener("submit", handleFormSubmit)
+  
+    // Category change
+    document.getElementById("itemCategory").addEventListener("change", handleCategoryChange)
+  
+    // Date navigation buttons
+    document.querySelectorAll(".date-nav-btn").forEach((btn) => {
+      btn.addEventListener("click", handleDateNavigation)
+    })
+  
+    // Date input change
+    document.getElementById("menu-date").addEventListener("change", (e) => {
+      currentDate = e.target.value
+      loadMenuItemsForDate(currentDate)
+    })
+  
+    // Publish button
+    document.querySelector(".publish-btn").addEventListener("click", publishMenu)
+  
+    // Avatar dropdown
+  
+    // Close dropdown when clicking outside
+    document.addEventListener("click", (event) => {
+      const dropdown = document.getElementById("dropdownMenu")
+      const avatar = document.querySelector(".avatar")
+  
+      if (dropdown.style.display === "block" && !avatar.contains(event.target) && !dropdown.contains(event.target)) {
+        dropdown.style.display = "none"
+      }
+    })
+  }
+
+   // Add event listener for inStock checkbox
+   document.getElementById("inStock").addEventListener("change", function(e) {
+     const stockCountInput = document.getElementById("stockCount");
+     
+     if (this.checked) {
+       // If checked, ensure stock count is at least 1
+       if (stockCountInput.value < 1) {
+         stockCountInput.value = 1;
+       }
+     } else {
+       // If unchecked, set stock count to 0
+       stockCountInput.value = 0;
+     }
+   });
+
+
+  // Load default menu items
+  function loadDefaultMenuItems() {
+    return fetch("/api/default-menu-items")
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to fetch default menu items: ${response.status}`)
+        }
+        return response.json()
+      })
+      .then((data) => {
+        defaultMenuItems = data || {}
+        console.log("Default menu items loaded:", defaultMenuItems)
+        return defaultMenuItems
+      })
+      .catch((error) => {
+        console.error("Error loading default menu items:", error)
+        return {}
+      })
+  }
+  
+  // Load menu items for a specific date
+  function loadMenuItemsForDate(date) {
+    // Show loading indicator
+    const tableBody = document.getElementById("menuItemsTable")
+    tableBody.innerHTML = '<tr><td colspan="8" class="text-center">Loading menu items...</td></tr>'
+  
+    // Format date for API call (remove hyphens)
+    const formattedDate = date.replace(/-/g, "")
+  
+    // Check authentication first
+    fetch("/check_auth")
+      .then((response) => response.json())
+      .then((authData) => {
+        if (!authData.authenticated) {
+          // If not authenticated, redirect to login
+          window.location.href = "/signin"
+          return
+        }
+  
+        // First try to get the published menu for this date
+        return fetch(`/api/published-menus/${formattedDate}`)
+          .then((response) => {
+            if (response.ok) {
+              return response.json()
+            } else if (response.status === 404) {
+              // If no menu exists for this date, create a copy of default menu items
+              return {
+                items: JSON.parse(JSON.stringify(defaultMenuItems)), // Deep copy
+                published_at: null,
+              }
+            } else {
+              throw new Error(`Failed to fetch menu items: ${response.status}`)
+            }
+          })
+          .then((data) => {
+            // Update menu items
+            menuItems = data.items || {}
+  
+            // Update last published date for this specific date
+            if (data.published_at) {
+              lastPublishedDates[date] = new Date(data.published_at).toLocaleString()
+              document.getElementById("lastPublishedDate").textContent = lastPublishedDates[date]
+            } else {
+              document.getElementById("lastPublishedDate").textContent = "Never"
+            }
+  
+            // Render menu items
+            renderMenuItems()
+          })
+      })
+      .catch((error) => {
+        console.error("Error loading menu items:", error)
+        tableBody.innerHTML = `<tr><td colspan="8" class="text-center">Error loading menu items: ${error.message}. Please try again or refresh the page.</td></tr>`
+  
+        // If we get an authentication error, redirect to login
+        if (error.message.includes("authentication") || error.message.includes("401")) {
+          window.location.href = "/signin"
+        }
+      })
+  }
+  
+  // Handle date navigation
+  function handleDateNavigation(event) {
+    const dateInput = document.getElementById("menu-date")
+    const date = new Date(dateInput.value)
+  
+    if (event.target.textContent.includes("Previous")) {
+      date.setDate(date.getDate() - 1)
+    } else if (event.target.textContent.includes("Next")) {
+      date.setDate(date.getDate() + 1)
+    } else if (event.target.textContent.includes("Today")) {
+      date.setDate(new Date().getDate())
+      date.setMonth(new Date().getMonth())
+      date.setFullYear(new Date().getFullYear())
+    }
+  
+    const newDate = date.toISOString().split("T")[0]
+    dateInput.value = newDate
+    currentDate = newDate
+  
+    // Load menu items for the new date
+    loadMenuItemsForDate(newDate)
+  }
+  
+  // Render menu items from the menuItems object
+  function renderMenuItems() {
+    const tableBody = document.getElementById("menuItemsTable")
+    tableBody.innerHTML = ""
+  
+    if (Object.keys(menuItems).length === 0) {
+      tableBody.innerHTML = '<tr><td colspan="8" class="text-center">No menu items found for this date.</td></tr>'
+      return
+    }
+  
+    Object.keys(menuItems).forEach((itemId) => {
+      const item = menuItems[itemId]
+  
+      const row = document.createElement("tr")
+      row.setAttribute("data-id", itemId)
+      row.setAttribute("data-category", item.category || "")
+      row.setAttribute("data-special", item.special || false)
+      row.setAttribute("data-instock", item.in_stock || false)
+  
+      row.innerHTML = `
+              <td>
+                  ${
+                    item.image_url
+                      ? `<img src="${item.image_url}" alt="${item.name}" class="item-image">`
+                      : `
+                  <div class="image-placeholder">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M4 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+                          <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+                          <path d="M3.5 9.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v.7a.5.5 0 0 0 .79.407l1-1a.5.5 0 0 1 .79.407v1.5a.5.5 0 0 1-.79.407l-1-1a.5.5 0 0 0-.79.407V11a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1.5z"/>
+                      </svg>
+                  </div>`
+                  }
+              </td>
+              <td>${item.name || ""}</td>
+              <td>${item.description || ""}</td>
+              <td>${item.category || ""}</td>
+              <td>
+                  <div class="price-display">
+                      ${
+                        item.discount > 0
+                          ? `
+                      <span>₹${(item.price - (item.price * item.discount) / 100).toFixed(2)}</span>
+                      <span class="original-price">₹${item.price.toFixed(2)}</span>
+                      `
+                          : `<span>₹${(item.price || 0).toFixed(2)}</span>`
+                      }
+                  </div>
+              </td>
+              <td>
+                  ${item.in_stock ? `<span class="stock-badge">${item.stock_count || 0} in stock</span>` : `<span class="out-stock-badge">Out of stock</span>`}
+              </td>
+              <td>
+                  ${item.special ? `<span class="special-badge">Today's Special</span>` : `<span>No</span>`}
+              </td>
+              <td class="actions">
+                  <button class="action-btn edit-btn" onclick="editItem('${itemId}')">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M12.146.146a.5.5 0 0 1 .708 0l3 3a.5.5 0 0 1 0 .708l-10 10a.5.5 0 0 1-.168.11l-5 2a.5.5 0 0 1-.65-.65l2-5a.5.5 0 0 1 .11-.168l10-10zM11.207 2.5 13.5 4.793 14.793 3.5 12.5 1.207 11.207 2.5zm1.586 3L10.5 3.207 4 9.707V10h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.293l6.5-6.5zm-9.761 5.175-.106.106-1.528 3.821 3.821-1.528.106-.106A.5.5 0 0 1 5 12.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.468-.325z"/>
+                      </svg>
+                  </button>
+                  <button class="action-btn delete-btn" onclick="deleteItem('${itemId}')">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z"/>
+                          <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1- 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+                      </svg>
+                  </button>
+              </td>
+          `
+  
+      tableBody.appendChild(row)
+    })
+  
+    // Apply any active filters
+    filterItems()
+  }
+  
+  // Open the modal for adding or editing an item
+  function openModal(isAdd, itemId = null) {
+    isAddMode = isAdd
+    currentItemId = itemId
+    isDefaultMenuMode = false // Reset default menu mode flag
+  
+    // Set modal title
+    document.getElementById("modalTitle").textContent = isAdd ? "Add Menu Item" : "Edit Menu Item"
+  
+    // Reset form
+    document.getElementById("itemForm").reset()
+    document.getElementById("imagePreview").innerHTML = `
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M4 3a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2H4zm0 1h8a1 1 0 0 1 1 1v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V5a1 1 0 0 1 1-1z"/>
+              <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"/>
+              <path d="M3.5 9.5a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v.7a.5.5 0 0 0 .79.407l1-1a.5.5 0 0 1 .79.407v1.5a.5.5 0 0 1-.79.407l-1-1a.5.5 0 0 0-.79.407V11a.5.5 0 0 1-.5.5H4a.5.5 0 0 1-.5-.5v-1.5z"/>
+          </svg>
+      `
+    document.getElementById("newCategoryGroup").style.display = "none"
+  
+    // If adding a new item, show option to add to default menu
+    if (isAdd) {
+      // Add checkbox for adding to default menu
+      const formActions = document.querySelector(".form-actions")
+      if (!document.getElementById("defaultMenuCheckbox")) {
+        const checkboxDiv = document.createElement("div")
+        checkboxDiv.className = "form-group checkbox-group"
+        checkboxDiv.innerHTML = `
+                  <input type="checkbox" id="defaultMenuCheckbox" checked>
+                  <label for="defaultMenuCheckbox">Add to default menu (available for all dates)</label>
+              `
+        formActions.insertAdjacentElement("beforebegin", checkboxDiv)
+      } else {
+        document.getElementById("defaultMenuCheckbox").checked = true
+      }
+    } else {
+      // Remove checkbox if it exists
+      const defaultMenuCheckbox = document.getElementById("defaultMenuCheckbox")
+      if (defaultMenuCheckbox) {
+        defaultMenuCheckbox.parentElement.remove()
+      }
+    }
+  
+    // If editing, populate form with item data
+    if (!isAdd && itemId) {
+      const item = menuItems[itemId]
+      if (item) {
+        document.getElementById("itemName").value = item.name || ""
+        document.getElementById("itemDescription").value = item.description || ""
+        document.getElementById("itemPrice").value = item.price || 0
+        document.getElementById("discountPercent").value = item.discount || 0
+        document.getElementById("itemCategory").value = item.category || ""
+        document.getElementById("stockCount").value = item.stock_count || 0
+        document.getElementById("inStock").checked = item.in_stock || false
+        document.getElementById("isSpecial").checked = item.special || false
+        document.getElementById("imageUrl").value = item.image_url || ""
+  
+        // Show image preview if available
+        if (item.image_url) {
+          document.getElementById("imagePreview").innerHTML =
+            `<img src="${item.image_url}" alt="${item.name}" style="width: 100%; height: 100%; object-fit: cover;">`
+        }
+      }
+    }
+  
+    // Show modal
+    document.getElementById("itemModal").style.display = "block"
+  }
+  
+  // Close the modal
+  function closeModal() {
+    document.getElementById("itemModal").style.display = "none"
+    currentItemId = null
+  }
+  
+  // Handle form submission
+  function handleFormSubmit(event) {
+    event.preventDefault()
+  
+    // Get form data
+    const name = document.getElementById("itemName").value
+    const description = document.getElementById("itemDescription").value
+    const price = Number.parseFloat(document.getElementById("itemPrice").value) || 0
+    const discount = Number.parseInt(document.getElementById("discountPercent").value) || 0
+    let category = document.getElementById("itemCategory").value
+  
+    // Validate price range (1 to 5000)
+    if (price < 1 || price > 5000) {
+      alert("Price must be between 1 and 5000")
+      return
+    }
+  
+    // Check if new category is selected
+    if (category === "new") {
+      category = document.getElementById("newCategory").value
+    }
+  
+    const stockCount = Number.parseInt(document.getElementById("stockCount").value) || 0
+    const inStock = document.getElementById("inStock").checked
+    const isSpecial = document.getElementById("isSpecial").checked
+    const imageUrl = document.getElementById("imageUrl").value
+  
+    // Validate stock count range (1 to 1000)
+    if (inStock && (stockCount < 1 || stockCount > 1000)) {
+      alert("Stock count must be between 1 and 1000 when item is in stock")
+      return
+    }
+  
+    // Create item object
+    const item = {
+      name,
+      description,
+      price,
+      discount,
+      category,
+      stock_count: stockCount,
+      in_stock: inStock,
+      special: isSpecial,
+      image_url: imageUrl,
+    }
+  
+    // Check if we're adding to default menu
+    const addToDefaultMenu = isAddMode && document.getElementById("defaultMenuCheckbox")?.checked
+  
+    // Generate ID if in add mode
+    const itemId = isAddMode ? generateItemId(name) : currentItemId
+  
+    if (isAddMode) {
+      if (addToDefaultMenu) {
+        // Add to default menu first
+        saveItemToDefaultMenu(itemId, item).then(() => {
+          // Then add to current date's menu
+          menuItems[itemId] = { ...item }
+          renderMenuItems()
+          closeModal()
+        })
+      } else {
+        // Just add to current date's menu
+        menuItems[itemId] = { ...item }
+        renderMenuItems()
+        closeModal()
+      }
+    } else {
+      // Update item in current date's menu
+      menuItems[itemId] = { ...item }
+      renderMenuItems()
+      closeModal()
+    }
+  }
+  
+  // Save item to the default menu
+  function saveItemToDefaultMenu(itemId, item) {
+    return fetch("/api/menu-items", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ ...item, id: itemId }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok")
+        }
+        return response.json()
+      })
+      .then((data) => {
+        // Update local default menu items
+        defaultMenuItems[itemId] = { ...item }
+        alert("Item added to default menu successfully!")
+        return data
+      })
+      .catch((error) => {
+        console.error("Error saving item to default menu:", error)
+        alert("Error adding item to default menu. Please try again.")
+        throw error
+      })
+  }
+  
+  // Generate an ID from the item name
+  function generateItemId(name) {
+    return name
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "")
+  }
+  
+  // Publish menu for the current date
+  function publishMenu() {
+    const date = document.getElementById("menu-date").value
+  
+    // Send data to server
+    fetch("/api/publish-menu", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        date: date,
+        items: menuItems,
+      }),
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Failed to publish menu: ${response.status}`)
+        }
+        return response.json()
+      })
+      .then((data) => {
+        // Update last published date for this specific date
+        const now = new Date().toLocaleString()
+        lastPublishedDates[date] = now
+        document.getElementById("lastPublishedDate").textContent = now
+  
+        // Show success message
+        alert(`Menu published successfully for ${date}!`)
+      })
+      .catch((error) => {
+        console.error("Error publishing menu:", error)
+        alert(`Error publishing menu: ${error.message}. Please try again.`)
+  
+        // If we get an authentication error, redirect to login
+        if (error.message.includes("authentication") || error.message.includes("401")) {
+          window.location.href = "/signin"
+        }
+      })
+  }
+  
+  // Handle category change
+  function handleCategoryChange(event) {
+    const value = event.target.value
+    const newCategoryGroup = document.getElementById("newCategoryGroup")
+  
+    if (value === "new") {
+      newCategoryGroup.style.display = "block"
+    } else {
+      newCategoryGroup.style.display = "none"
+    }
+  }
+  
+  // Preview image before upload
+  function previewImage(input) {
+    if (input.files && input.files[0]) {
+      const reader = new FileReader()
+  
+      reader.onload = (e) => {
+        document.getElementById("imagePreview").innerHTML =
+          `<img src="${e.target.result}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`
+        document.getElementById("imageUrl").value = e.target.result
+      }
+  
+      reader.readAsDataURL(input.files[0])
+    }
+  }
+  
+  // Delete an item
+  function deleteItem(itemId) {
+    if (confirm("Are you sure you want to delete this item from the current date's menu?")) {
+      // Delete from current date's menu
+      delete menuItems[itemId]
+      renderMenuItems()
+    }
+  }
+  
+  // Filter menu items based on search, category, and status
+  function filterItems() {
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase()
+    const categoryFilter = document.getElementById("categoryFilter").value
+    const statusFilter = document.getElementById("statusFilter").value
+  
+    const rows = document.querySelectorAll("#menuItemsTable tr")
+  
+    rows.forEach((row) => {
+      // Skip rows that don't have data attributes (like message rows)
+      if (!row.hasAttribute("data-id")) {
+        return
+      }
+  
+      const name = row.querySelector("td:nth-child(2)")?.textContent.toLowerCase() || ""
+      const description = row.querySelector("td:nth-child(3)")?.textContent.toLowerCase() || ""
+      const category = row.dataset.category || ""
+      const isSpecial = row.dataset.special === "true"
+      const isInStock = row.dataset.instock === "true"
+  
+      let showRow = true
+  
+      // Apply search filter
+      if (searchTerm && !name.includes(searchTerm) && !description.includes(searchTerm)) {
+        showRow = false
+      }
+  
+      // Apply category filter
+      if (categoryFilter && category !== categoryFilter) {
+        showRow = false
+      }
+  
+      // Apply status filter
+      if (statusFilter === "in-stock" && !isInStock) {
+        showRow = false
+      } else if (statusFilter === "out-stock" && isInStock) {
+        showRow = false
+      } else if (statusFilter === "special" && !isSpecial) {
+        showRow = false
+      }
+  
+      row.style.display = showRow ? "" : "none"
+    })
+  }
+  
+  // Toggle user dropdown
+  window.toggleDropdown = function() {
+            const dropdown = document.getElementById('dropdownMenu');
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        };
+        
+        // Close dropdown when clicking outside
+        window.addEventListener('click', (event) => {
+            if (!event.target.matches('.avatar')) {
+                const dropdown = document.getElementById('dropdownMenu');
+                if (dropdown.style.display === 'block') {
+                    dropdown.style.display = 'none';
+                }
+            }
+        });
+  // Make functions available globally
+  window.openModal = openModal
+  window.closeModal = closeModal
+  window.editItem = editItem
+  window.deleteItem = deleteItem
+  window.previewImage = previewImage
+  window.filterItems = filterItems
+  window.publishMenu = publishMenu
+  window.loadMenuItemsForDate = loadMenuItemsForDate
+  window.handleFormSubmit = handleFormSubmit
+  window.handleCategoryChange = handleCategoryChange
+  
+  // Define editItem function
+  function editItem(itemId) {
+    openModal(false, itemId)
+  }
+  </script>
+</body>
+
+</html>

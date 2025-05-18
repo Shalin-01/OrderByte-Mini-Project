@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OrderByte - Food Ordering</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='home.css') }}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <a href="{{ url_for('home') }}" class="logo">OrderByte</a>
+        <div class="nav-links">
+            <a href="{{ url_for('home') }}">HOME</a>
+            <a href="{{ url_for('search') }}">SEARCH</a>
+            <a href="{{ url_for('cart') }}">CART</a> 
+                       
+            <div class="avatar-container">
+                <img id="navAvatar" src="{{ user_data.get('profile_picture', '/static/uploads/default_user.png') if user_data else '/static/uploads/default_user.png' }}"
+                alt="User Avatar"
+                class="avatar"
+                onclick="toggleDropdown()"
+                />
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="{{url_for('profile')}}">PROFILE</a>
+                    <a href="{{ url_for('complaint_history') }}">COMPLAINTS</a>
+                    <a href="{{ url_for('logout') }}">LOGOUT</a>
+                  </div>
+              </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" class="loading-container">
+            <div class="spinner"></div>
+        </div>
+        
+        <!-- No menu available message -->
+        <div id="noMenuMessage" class="no-menu-message" style="display: none;">
+            No menu has been published for today. Please check back later.
+        </div>
+
+        <!-- Breakfast Section -->
+        <section class="category-section" id="breakfastSection" style="display: none;">
+            <h2 class="category-title">
+                <a class="category-link">
+                    Breakfast
+                    <span class="arrow">→</span>
+                </a>
+            </h2>
+            <div class="scroll-container">
+                <div class="scroll-buttons">
+                    <button class="scroll-btn left">←</button>
+                    <button class="scroll-btn right">→</button>
+                </div>
+                <div class="food-grid" id="breakfastGrid">
+                    <!-- Breakfast items will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Lunch Section -->
+        <section class="category-section" id="lunchSection" id="lunchSection" style="display: none;">
+            <h2 class="category-title">
+                <a class="category-link">
+                    Lunch
+                    <span class="arrow">→</span>
+                </a>
+            </h2>
+            <div class="scroll-container">
+                <div class="scroll-buttons">
+                    <button class="scroll-btn left">←</button>
+                    <button class="scroll-btn right">→</button>
+                </div>
+                <div class="food-grid" id="lunchGrid">
+                    <!-- Lunch items will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Curry Section -->
+        <section class="category-section" id="currySection" style="display: none;">
+            <h2 class="category-title">
+                <a class="category-link">
+                    Curry
+                    <span class="arrow">→</span>
+                </a>
+            </h2>
+            <div class="scroll-container">
+                <div class="scroll-buttons">
+                    <button class="scroll-btn left">←</button>
+                    <button class="scroll-btn right">→</button>
+                </div>
+                <div class="food-grid" id="curryGrid">
+                    <!-- Curry items will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Desserts Section -->
+        <section class="category-section" id="dessertsSection" style="display: none;">
+            <h2 class="category-title">
+                <a class="category-link">
+                    Desserts
+                    <span class="arrow">→</span>
+                </a>
+            </h2>
+            <div class="scroll-container">
+                <div class="scroll-buttons">
+                    <button class="scroll-btn left">←</button>
+                    <button class="scroll-btn right">→</button>
+                </div>
+                <div class="food-grid" id="dessertsGrid">
+                    <!-- Desserts items will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Drinks Section -->
+        <section class="category-section" id="drinksSection" style="display: none;">
+            <h2 class="category-title">
+                <a class="category-link">
+                    Drinks
+                    <span class="arrow">→</span>
+                </a>
+            </h2>
+            <div class="scroll-container">
+                <div class="scroll-buttons">
+                    <button class="scroll-btn left">←</button>
+                    <button class="scroll-btn right">→</button>
+                </div>
+                <div class="food-grid" id="drinksGrid">
+                    <!-- Drinks items will be loaded dynamically -->
+                </div>
+            </div>
+        </section>
+    </div>
+    <script src="{{ url_for('static', filename='js/home.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/common.js') }}"></script>
+
+</body>
+</html>

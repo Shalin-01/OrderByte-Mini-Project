@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Order Confirmation - OrderByte</title>
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: #f5f5f5;
+      color: #333;
+      padding-top: 80px; /* Add padding to account for the header */
+    }
+
+    /* Simplified Header Styling */
+    .header {
+      background-color: black;
+      padding: 1rem 2rem;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      width: 100%;
+      top: 0;
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+
+    .back-arrow {
+      color: white;
+      font-size: 1.5rem;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .back-arrow:hover {
+      color: #ffd700;
+    }
+
+    .header-brand {
+      color: white;
+      font-size: 1.5rem;
+      font-weight: bold;
+      text-decoration: none;
+      flex-grow: 1;
+      text-align: center;
+    }
+
+    /* Order Confirmation Styling */
+    .order-confirmation {
+      max-width: 800px;
+      margin: 20px auto 30px;
+      padding: 25px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+
+    .order-header {
+      text-align: center;
+      margin-bottom: 35px;
+    }
+
+    .order-header h1 {
+      color: #3f88f2;
+      margin-bottom: 12px;
+      font-size: 28px;
+    }
+
+    .order-details {
+      background-color: #f9f9f9;
+      border-radius: 10px;
+      padding: 25px;
+      margin-bottom: 35px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.02);
+    }
+
+    .order-summary {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .order-summary:last-child {
+      border-bottom: none;
+    }
+
+    .order-items {
+      margin-top: 35px;
+    }
+
+    .order-items h2 {
+      color: #333;
+      margin-bottom: 20px;
+      position: relative;
+      padding-bottom: 10px;
+    }
+
+    .order-items h2::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 50px;
+      height: 3px;
+      background-color: #3f88f2;
+    }
+
+    .order-item {
+      display: flex;
+      border-bottom: 1px solid #eee;
+      padding: 20px 0;
+      align-items: center;
+    }
+
+    .item-image {
+      width: 90px;
+      height: 90px;
+      border-radius: 10px;
+      overflow: hidden;
+      margin-right: 20px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .item-image img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .item-details {
+      flex-grow: 1;
+    }
+
+    .item-details h3 {
+      margin-bottom: 8px;
+      color: #333;
+    }
+
+    .item-price {
+      text-align: right;
+      min-width: 100px;
+      font-weight: bold;
+      color: #3f88f2;
+    }
+
+    .success-icon {
+      width: 80px;
+      height: 80px;
+      background-color: #4CAF50;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 25px;
+      box-shadow: 0 4px 10px rgba(76, 175, 80, 0.3);
+    }
+
+    .success-icon svg {
+      width: 40px;
+      height: 40px;
+      fill: white;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin-top: 35px;
+    }
+
+    .action-buttons button {
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .primary-btn {
+      background-color: #3f88f2;
+      color: white;
+      border: none;
+      box-shadow: 0 4px 6px rgba(63, 136, 242, 0.25);
+    }
+
+    .primary-btn:hover {
+      background-color: #2a70d8;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 12px rgba(63, 136, 242, 0.3);
+    }
+
+    .secondary-btn {
+      background-color: white;
+      color: #3f88f2;
+      border: 1px solid #3f88f2;
+    }
+
+    .secondary-btn:hover {
+      background-color: #f0f7ff;
+      transform: translateY(-2px);
+    }
+
+    .download-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background-color: white;
+      color: #3f88f2;
+      border: 1px solid #3f88f2;
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+    }
+
+    .download-btn:hover {
+      background-color: #f0f7ff;
+      transform: translateY(-2px);
+    }
+
+    .download-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .cancel-btn {
+      background-color: white;
+      color: #e53935;
+      border: 1px solid #e53935;
+      padding: 12px 25px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .cancel-btn:hover {
+      background-color: #ffebee;
+      transform: translateY(-2px);
+    }
+
+    .cancel-btn svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    .cancellation-notice {
+      background-color: #fff8e1;
+      border: 1px solid #ffe082;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 20px 0;
+      color: #ff8f00;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cancellation-notice svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    .cancelled-notice {
+      background-color: #ffebee;
+      border: 1px solid #ffcdd2;
+      border-radius: 8px;
+      padding: 12px 16px;
+      margin: 20px 0;
+      color: #c62828;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .cancelled-notice svg {
+      width: 24px;
+      height: 24px;
+      flex-shrink: 0;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1050;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: #fefefe;
+      margin: 15% auto;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      width: 80%;
+      max-width: 500px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+      animation: modalFade 0.3s;
+    }
+
+    @keyframes modalFade {
+      from {
+        opacity: 0;
+        transform: translateY(-30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .modal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 15px;
+    }
+
+    .modal-header h2 {
+      margin: 0;
+      color: #333;
+      font-size: 1.5rem;
+    }
+
+    .close {
+      color: #aaa;
+      font-size: 28px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+      color: black;
+      text-decoration: none;
+    }
+
+    .modal-body {
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 10px;
+    }
+
+    .modal-btn {
+      padding: 10px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .modal-btn-cancel {
+      background-color: white;
+      color: #333;
+      border: 1px solid #ddd;
+    }
+
+    .modal-btn-cancel:hover {
+      background-color: #f5f5f5;
+    }
+
+    .modal-btn-confirm {
+      background-color: #e53935;
+      color: white;
+      border: none;
+    }
+
+    .modal-btn-confirm:hover {
+      background-color: #c62828;
+    }
+
+    /* Price display styling */
+    .original-price {
+      text-decoration: line-through;
+      color: #999;
+      font-size: 0.85em;
+      margin-right: 5px;
+    }
+
+    .discount-badge {
+      background-color: #e53935;
+      color: white;
+      font-size: 0.7em;
+      padding: 2px 5px;
+      border-radius: 3px;
+      margin-left: 5px;
+      vertical-align: middle;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        padding: 1rem;
+      }
+      
+      .order-confirmation {
+        margin: 15px 15px 15px;
+        padding: 15px;
+      }
+      
+      .action-buttons {
+        flex-direction: column;
+      }
+      
+      .action-buttons button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Simplified Header with Back Arrow and Centered Logo -->
+  <header class="header">
+ <a href="/profile" class="back-arrow">
+  <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M19 12H5M12 19l-7-7 7-7"/>
+  </svg>
+</a>
+  <div class="header-brand">OrderByte</div>
+  <!-- Empty div to balance the header -->
+  <div style="width: 24px;"></div>
+</header>
+
+  <!-- Order Confirmation Content -->
+  <div class="order-confirmation">
+    <div class="order-header">
+      <div class="success-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+          <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/>
+        </svg>
+      </div>
+      <h1>Order Confirmed!</h1>
+      <p>Thank you for your order. Your food is being prepared.</p>
+    </div>
+    
+    {% if order.status == 'cancelled' %}
+    <div class="cancelled-notice">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="15" y1="9" x2="9" y2="15"></line>
+        <line x1="9" y1="9" x2="15" y2="15"></line>
+      </svg>
+      <span>This order has been cancelled.</span>
+    </div>
+    {% elif order.cancellable %}
+    <div class="cancellation-notice">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <span>You can cancel this order within the next {{ order.minutes_left }} minute{% if order.minutes_left != 1 %}s{% endif %}.</span>
+    </div>
+    {% endif %}
+    
+    <div class="order-details">
+      <div class="order-summary">
+        <div>
+          <strong>Order ID:</strong>
+        </div>
+        <div>{{ order.order_id }}</div>
+      </div>
+      <div class="order-summary">
+        <div>
+          <strong>Date:</strong>
+        </div>
+        <div>{{ order.created_at.split('T')[0] }}</div>
+      </div>
+      <div class="order-summary">
+        <div>
+          <strong>Status:</strong>
+        </div>
+        <div>{{ order.status.upper() }}</div>
+      </div>
+      <div class="order-summary">
+        <div>
+          <strong>Payment Status:</strong>
+        </div>
+        <div>
+          {% if order.status == 'cancelled' %}
+            PAID (Cancellation Pending)
+          {% else %}
+            {{ order.payment_status.upper() }}
+          {% endif %}
+        </div>
+      </div>
+      <div class="order-summary">
+        <div>
+          <strong>Total Amount:</strong>
+        </div>
+        <div>₹{{ "%.2f"|format(order.amount) }}</div>
+      </div>
+    </div>
+    
+    <div class="order-items">
+      <h2>Order Items</h2>
+      {% if order.order_items and order.order_items|length > 0 %}
+        {% for item_info in order.order_items %}
+        <div class="order-item">
+          <div class="item-image">
+            <img src="{{ item_info[1].image_url }}" alt="{{ item_info[1].name }}" onerror="this.src='/static/img/default-food.png'">
+          </div>
+          <div class="item-details">
+            <h3>{{ item_info[1].name }}</h3>
+            <p>Quantity: {{ item_info[1].quantity }}</p>
+            {% if item_info[1].discount and item_info[1].discount > 0 %}
+            <p>
+              <span class="discount-badge">{{ item_info[1].discount }}% OFF</span>
+            </p>
+            {% endif %}
+          </div>
+          <div class="item-price">
+            {% if item_info[1].discount and item_info[1].discount > 0 %}
+              <p>
+                <span class="original-price">₹{{ "%.2f"|format(item_info[1].original_price * item_info[1].quantity) }}</span>
+                ₹{{ "%.2f"|format(item_info[1].price * item_info[1].quantity) }}
+              </p>
+            {% else %}
+              <p>₹{{ "%.2f"|format(item_info[1].price * item_info[1].quantity) }}</p>
+            {% endif %}
+          </div>
+        </div>
+        {% endfor %}
+      {% else %}
+        <p>No items found in this order.</p>
+      {% endif %}
+    </div>
+    
+    <div class="action-buttons">
+      <button class="primary-btn" onclick="window.location.href='/home'">Continue Shopping</button>
+      <button class="secondary-btn" onclick="window.location.href='/profile'">View All Orders</button>
+      <button class="download-btn" onclick="window.location.href = '/download-invoice/{{ order.order_id }}'">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Download Invoice
+      </button>
+      
+      {% if order.cancellable %}
+      <button class="cancel-btn" onclick="openCancelModal('{{ order.order_id }}')">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="10"></circle>
+          <line x1="15" y1="9" x2="9" y2="15"></line>
+          <line x1="9" y1="9" x2="15" y2="15"></line>
+        </svg>
+        Cancel Order
+      </button>
+      {% endif %}
+    </div>
+  </div>
+  
+  <!-- Cancel Order Modal -->
+  <div id="cancelModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Cancel Order</h2>
+        <span class="close" onclick="closeCancelModal()">&times;</span>
+      </div>
+      <div class="modal-body">
+        <p>Are you sure you want to cancel this order? This action cannot be undone.</p>
+        <p>A refund will be processed to your original payment method.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="modal-btn modal-btn-cancel" onclick="closeCancelModal()">No, Keep Order</button>
+        <button class="modal-btn modal-btn-confirm" onclick="confirmCancelOrder()">Yes, Cancel Order</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Global variables
+   
+    
+    function goBack() {
+      // Always redirect to the profile page
+      window.location.href = '/profile';
+    }
+
+    // Function to download invoice
+    function downloadInvoice(orderId) {
+      window.location.href = `/download-invoice/${orderId}`;
+    }
+    
+    // Function to open cancel modal
+    function openCancelModal(orderId) {
+      currentOrderId = orderId;
+      document.getElementById('cancelModal').style.display = 'block';
+    }
+    
+    // Function to close cancel modal
+    function closeCancelModal() {
+      document.getElementById('cancelModal').style.display = 'none';
+    }
+    
+    // Function to confirm order cancellation
+    function confirmCancelOrder() {
+      if (!currentOrderId) return;
+      
+      // Show loading state
+      const confirmButton = document.querySelector('.modal-btn-confirm');
+      const originalText = confirmButton.textContent;
+      confirmButton.textContent = 'Processing...';
+      confirmButton.disabled = true;
+      
+      // Send cancellation request to server
+      fetch(`/api/orders/${currentOrderId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        closeCancelModal();
+        
+        if (data.success) {
+          // Reload the page to show updated status
+          window.location.reload();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to cancel order'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while cancelling the order. Please try again.');
+      })
+      .finally(() => {
+        // Reset button state
+        confirmButton.textContent = originalText;
+        confirmButton.disabled = false;
+      });
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('cancelModal');
+      if (event.target === modal) {
+        closeCancelModal();
+      }
+    }
+    // Add this function to ensure discounts are properly calculated and displayed
+export async function getServerSideProps({ params }) {
+  try {
+    const { orderId } = params
+
+    // Fetch order details
+    const orderRef = db.ref(`orders/${orderId}`)
+    const orderSnapshot = await orderRef.once("value")
+    const order = orderSnapshot.val()
+
+    if (!order) {
+      return {
+        notFound: true,
+      }
+    }
+
+    // Process items to ensure discounts are correctly applied
+    if (order.items) {
+      let totalAmount = 0
+      const processedItems = []
+
+      for (const [itemId, item] of Object.entries(order.items)) {
+        if (typeof item === "object") {
+          // Get the menu item to check for current discount
+          const menuItemRef = db.ref(`menu_items/${itemId}`)
+          const menuItem = await menuItemRef.once("value").then((snap) => snap.val())
+
+          const originalPrice = item.price || 0
+          const discount = menuItem?.discount || item.discount || 0
+          const discountedPrice = discount > 0 ? originalPrice - (originalPrice * discount) / 100 : originalPrice
+
+          const quantity = item.quantity || 1
+          const itemTotal = discountedPrice * quantity
+          totalAmount += itemTotal
+
+          processedItems.push([
+            itemId,
+            {
+              ...item,
+              name: item.name || menuItem?.name || "Unknown Item",
+              price: discountedPrice,
+              original_price: originalPrice,
+              discount: discount,
+              quantity: quantity,
+              image_url: item.image_url || menuItem?.image_url || "",
+            },
+          ])
+        }
+      }
+
+      // Update the order with processed items and correct total
+      order.order_items = processedItems
+
+      // Update the order amount if it doesn't match calculated total
+      if (Math.abs(order.amount - totalAmount) > 0.01) {
+        await orderRef.update({ amount: totalAmount })
+        order.amount = totalAmount
+      }
+    }
+
+    return {
+      props: {
+        order,
+        orderId,
+      },
+    }
+  } catch (error) {
+    console.error("Error fetching order:", error)
+    return {
+      props: {
+        error: error.message,
+      },
+    }
+  }
+}
+  // Global variables
+  let currentOrderId = '';
+    
+    // Function to open cancel modal
+    function openCancelModal(orderId) {
+      currentOrderId = orderId;
+      document.getElementById('cancelModal').style.display = 'block';
+    }
+    
+    // Function to close cancel modal
+    function closeCancelModal() {
+      document.getElementById('cancelModal').style.display = 'none';
+    }
+    
+    // Function to confirm order cancellation
+    function confirmCancelOrder() {
+      if (!currentOrderId) return;
+      
+      // Show loading state
+      const confirmButton = document.querySelector('.modal-btn-confirm');
+      const originalText = confirmButton.textContent;
+      confirmButton.textContent = 'Processing...';
+      confirmButton.disabled = true;
+      
+      // Send cancellation request to server
+      fetch(`/api/orders/${currentOrderId}/cancel`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      })
+      .then(response => response.json())
+      .then(data => {
+        closeCancelModal();
+        
+        if (data.success) {
+          // Reload the page to show updated status
+          window.location.reload();
+        } else {
+          alert('Error: ' + (data.error || 'Failed to cancel order'));
+        }
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('An error occurred while cancelling the order. Please try again.');
+      })
+      .finally(() => {
+        // Reset button state
+        confirmButton.textContent = originalText;
+        confirmButton.disabled = false;
+      });
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('cancelModal');
+      if (event.target === modal) {
+        closeCancelModal();
+      }
+    }
+
+    // Make sure the server-side props function is called when loading the page
+document.addEventListener('DOMContentLoaded', function() {
+  // Get the order ID from the URL
+  const pathParts = window.location.pathname.split('/');
+  const orderId = pathParts[pathParts.length - 1];
+  
+  // Call an API to update stock if needed
+  fetch('/api/update-stock', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ order_id: orderId })
+  })
+  .then(response => response.json())
+  .catch(error => console.error('Error updating stock:', error));
+});
+document.addEventListener('DOMContentLoaded', function() {
+  // Define global goBack function
+  window.goBack = function() {
+    window.location.href = '/profile';
+  };
+  
+  // Add click event listener to back arrow
+  document.querySelector('.back-arrow').addEventListener('click', function(e) {
+    e.preventDefault();
+    goBack();
+  });
+});
+  </script>
+</body>
+</html>
