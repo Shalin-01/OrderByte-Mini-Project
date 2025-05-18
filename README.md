@@ -1,13 +1,13 @@
 
-🍽️ OrderByte - Smart Food Ordering System
+#🍽️ OrderByte - Smart Food Ordering System
 
 OrderByte is a web-based food ordering platform that provides a smooth and intuitive interface for both users and administrators. It supports menu management, ordering, invoicing, complaint handling, and Razorpay integration.
 
 ---
 
-🚀 Features
+##🚀 Features
 
-👤 User
+###👤 User
 - Sign up / Sign in / Password reset
 - Browse today's menu with categories
 - Add items to cart and place orders
@@ -18,7 +18,7 @@ OrderByte is a web-based food ordering platform that provides a smooth and intui
 - View profile and update contact info
 - Search menu with filters
 
-🛠️ Admin
+###🛠️ Admin
 - Admin-only login
 - Add/Edit/Delete menu items
 - Publish today's menu
@@ -27,84 +27,85 @@ OrderByte is a web-based food ordering platform that provides a smooth and intui
 - Manage stock and discounts
 - Admin profile page
 
-🔐 Authentication
+##🔐 Authentication
 - Firebase Authentication for users and admin
 - Email and password based sign-in
 
-💾 Backend
+##💾 Backend
 - Flask (Python)
 - Firebase Realtime Database
 
 ---
 
-⚙️ Installation & Setup
+##⚙️ Installation & Setup
 
-1. Clone the Repository
-   git clone https://github.com/Merlyn2004/OrderByte.git
-   cd OrderByte
+1. **Clone the Repository**  
+   git clone https://github.com/yourusername/OrderByte.git  
+   cd OrderByte  
 
-2. Create & Activate a Virtual Environment
-   python -m venv venv
-   source venv/bin/activate  
+2.**Create & Activate a Virtual Environment**  
+   python -m venv venv  
+   source venv/bin/activate  # or venv\Scripts\activate on Windows  
 
-3. Install Dependencies
+3. **Install Dependencies**  
    pip install -r requirements.txt
 
-4. Setup Firebase
-   Place your Firebase credentials JSON file as:
+4. **Setup Firebase**  
+   Place your Firebase credentials JSON file as:  
    /serviceAccountKey.json
 
-5. Create .env File
-   In the root folder, create a file named `.env` with the following keys:
+5. **Create .env File**
+   In the root folder, create a file named `.env` with the following keys:  
 
-   SECRET_KEY=your_secret_key
-  EMAIL_USER=your_email_user
-  EMAIL_PASSWORD=your_email_password
-  ADMIN_EMAIL=your_admin_email
-  ADMIN_PASSWORD=your_admin_password
-  FIREBASE_API_KEY=your_firebase_api_key
-  FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com
-  FIREBASE_DATABASE_URL=https://your_project_id.firebaseio.com
-  FIREBASE_PROJECT_ID=your_project_id
-  FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com
-  FIREBASE_MESSAGING_SENDER_ID=your_sender_id
-  FIREBASE_APP_ID=your_app_id
-  RAZORPAY_KEY_ID=your_test_key_id
-  RAZORPAY_KEY_SECRET=your_test_key_secret
-  EMAIL_HOST=your_email_host
-  EMAIL_PORT=your_email_port
-  NOTIFICATION_EMAIL=your_notification_email
-  FIREBASE_PRIVATE_KEY=your_firebase_private_key
-  FIREBASE_CLIENT_EMAIL=your_firebase_client_email
+   SECRET_KEY=your_secret_key  
+   EMAIL_USER=your_email_user   
+   EMAIL_PASSWORD=your_email_password   
+   ADMIN_EMAIL=your_admin_email  
+   ADMIN_PASSWORD=your_admin_password  
+   FIREBASE_API_KEY=your_firebase_api_key  
+   FIREBASE_AUTH_DOMAIN=your_project_id.firebaseapp.com  
+   FIREBASE_DATABASE_URL=https://your_project_id.firebaseio.com  
+   FIREBASE_PROJECT_ID=your_project_id  
+   FIREBASE_STORAGE_BUCKET=your_project_id.appspot.com  
+   FIREBASE_MESSAGING_SENDER_ID=your_sender_id  
+   FIREBASE_APP_ID=your_app_id  
+   RAZORPAY_KEY_ID=your_test_key_id  
+   RAZORPAY_KEY_SECRET=your_test_key_secret  
+   EMAIL_HOST=your_email_host  
+   EMAIL_PORT=your_email_port  
+   NOTIFICATION_EMAIL=your_notification_email  
+   FIREBASE_PRIVATE_KEY=your_firebase_private_key  
+   FIREBASE_CLIENT_EMAIL=your_firebase_client_email  
 
-6. Run the App
+6.**Run the App**  
    python app.py
 
 ---
 
-📸 Screenshots
+##📸 Screenshots
 
-Created a screenshots folder you can refer that.
+Refer to the /screenshots folder for the user interface and key pages.
+
 ---
 
-📦 Technologies Used
+##📦 Technologies Used
 
 - Python (Flask)
 - HTML, CSS, JavaScript
 - Firebase (Auth + Realtime DB)
 - Razorpay Payment Gateway
-- Email SMTP 
+- Email SMTP (for complaint notifications)
 
 ---
 
-✍️ Authors
+##✍️ Authors
 
-Merlyn,Rinny,Shalin,Sneha
-BTech 3rd Year Students
+Merlyn,Rinny,Shalin,Sneha  
+BTech 3rd Year Students  
 Mini Project: OrderByte
 
 ---
 
-📝 License
+##📝 License
 
 This project is for educational/demo purposes only. All rights reserved.
