@@ -1,13 +1,13 @@
 
-#🍽️ OrderByte - Smart Food Ordering System
+# 🍽️ OrderByte - Smart Food Ordering System
 
 OrderByte is a web-based food ordering platform that provides a smooth and intuitive interface for both users and administrators. It supports menu management, ordering, invoicing, complaint handling, and Razorpay integration.
 
 ---
 
-##🚀 Features
+## 🚀 Features
 
-###👤 User
+### 👤 User
 - Sign up / Sign in / Password reset
 - Browse today's menu with categories
 - Add items to cart and place orders
@@ -18,7 +18,7 @@ OrderByte is a web-based food ordering platform that provides a smooth and intui
 - View profile and update contact info
 - Search menu with filters
 
-###🛠️ Admin
+### 🛠️ Admin
 - Admin-only login
 - Add/Edit/Delete menu items
 - Publish today's menu
@@ -27,23 +27,23 @@ OrderByte is a web-based food ordering platform that provides a smooth and intui
 - Manage stock and discounts
 - Admin profile page
 
-##🔐 Authentication
+## 🔐 Authentication
 - Firebase Authentication for users and admin
 - Email and password based sign-in
 
-##💾 Backend
+## 💾 Backend
 - Flask (Python)
 - Firebase Realtime Database
 
 ---
 
-##⚙️ Installation & Setup
+## ⚙️ Installation & Setup
 
 1. **Clone the Repository**  
-   git clone https://github.com/yourusername/OrderByte.git  
+   git clone https://github.com/Merlyn2004/OrderByte.git  
    cd OrderByte  
 
-2.**Create & Activate a Virtual Environment**  
+ 2. **Create & Activate a Virtual Environment**  
    python -m venv venv  
    source venv/bin/activate  # or venv\Scripts\activate on Windows  
 
@@ -77,18 +77,18 @@ OrderByte is a web-based food ordering platform that provides a smooth and intui
    FIREBASE_PRIVATE_KEY=your_firebase_private_key  
    FIREBASE_CLIENT_EMAIL=your_firebase_client_email  
 
-6.**Run the App**  
+ 6. **Run the App**  
    python app.py
 
 ---
 
-##📸 Screenshots
+## 📸 Screenshots
 
 Refer to the /screenshots folder for the user interface and key pages.
 
 ---
 
-##📦 Technologies Used
+## 📦 Technologies Used
 
 - Python (Flask)
 - HTML, CSS, JavaScript
@@ -98,14 +98,19 @@ Refer to the /screenshots folder for the user interface and key pages.
 
 ---
 
-##✍️ Authors
+## ✍️ Authors
 
-Merlyn,Rinny,Shalin,Sneha  
+* Merlyn Mary Stephen  
+* Rinny Anna Thomas  
+* Shalin Ann Thomas  
+* Sneha Mariam Samuel
+   
 BTech 3rd Year Students  
-Mini Project: OrderByte
+
+#### Mini Project: OrderByte
 
 ---
 
-##📝 License
+## 📝 License
 
 This project is for educational/demo purposes only. All rights reserved.
