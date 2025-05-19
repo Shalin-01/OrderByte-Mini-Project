@@ -63,8 +63,8 @@ cred = credentials.Certificate({
     "token_uri": "https://oauth2.googleapis.com/token",
 })
 firebase_admin.initialize_app(cred, {
-    'databaseURL': 'https://just-c1fe5-default-rtdb.firebaseio.com',  # Your Realtime Database URL
-    'storageBucket': 'just-c1fe5.firebasestorage.app'  # Replace with your Firebase Storage bucket name
+    'databaseURL': 'your-database-url',  # Your Realtime Database URL
+    'storageBucket': 'your-bucket-name'  # Replace with your Firebase Storage bucket name
 })
 ref = db.reference('/')
 # Add this to app.py after Firebase initialization
